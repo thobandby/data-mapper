@@ -1,0 +1,8 @@
+{
+  "packages/core": "0.9.0",
+  "packages/cli-adapter": "0.9.0",
+  "packages/doctrine-adapter": "0.9.0",
+  "packages/symfony-adapter": "0.9.0",
+  "apps/demo-cli": "0.9.0",
+  "apps/demo-symfony": "0.9.0"
+}

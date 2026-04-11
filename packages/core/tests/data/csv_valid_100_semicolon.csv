@@ -1,0 +1,101 @@
+id;name;email;price;description
+1;Erika Musterfrau;user1@test.local;1.37;Standard Datensatz
+2;Hans Müller;user2@demo.org;2.74;Text mit Umlaut äöü
+3;Julia Schmidt;user3@example.com;4.11;Normaler Inhalt ohne Probleme
+4;Peter Pan;user4@test.local;5.48;Kurzer Beschreibungstext
+5;Anna Klein;user5@demo.org;6.85;Eintrag für Testzwecke
+6;Tom Test;user6@example.com;8.22;Alles gut
+7;Lisa Lang;user7@test.local;9.59;Standard Datensatz
+8;Karl Kurz;user8@demo.org;10.96;Text mit Umlaut äöü
+9;Sabine Groß;user9@example.com;12.33;Normaler Inhalt ohne Probleme
+10;Maja Becker;user10@test.local;13.7;Kurzer Beschreibungstext
+11;Jens Fischer;user11@demo.org;15.07;Eintrag für Testzwecke
+12;Kalle Braun;user12@example.com;16.44;Alles gut
+13;Biggi Sommer;user13@test.local;17.81;Standard Datensatz
+14;Niklas Berg;user14@demo.org;19.18;Text mit Umlaut äöü
+15;Max Mustermann;user15@example.com;20.55;Normaler Inhalt ohne Probleme
+16;Erika Musterfrau;user16@test.local;21.92;Kurzer Beschreibungstext
+17;Hans Müller;user17@demo.org;23.29;Eintrag für Testzwecke
+18;Julia Schmidt;user18@example.com;24.66;Alles gut
+19;Peter Pan;user19@test.local;26.03;Standard Datensatz
+20;Anna Klein;user20@demo.org;27.4;Text mit Umlaut äöü
+21;Tom Test;user21@example.com;28.77;Normaler Inhalt ohne Probleme
+22;Lisa Lang;user22@test.local;30.14;Kurzer Beschreibungstext
+23;Karl Kurz;user23@demo.org;31.51;Eintrag für Testzwecke
+24;Sabine Groß;user24@example.com;32.88;Alles gut
+25;Maja Becker;user25@test.local;34.25;Standard Datensatz
+26;Jens Fischer;user26@demo.org;35.62;Text mit Umlaut äöü
+27;Kalle Braun;user27@example.com;36.99;Normaler Inhalt ohne Probleme
+28;Biggi Sommer;user28@test.local;38.36;Kurzer Beschreibungstext
+29;Niklas Berg;user29@demo.org;39.73;Eintrag für Testzwecke
+30;Max Mustermann;user30@example.com;41.1;Alles gut
+31;Erika Musterfrau;user31@test.local;42.47;Standard Datensatz
+32;Hans Müller;user32@demo.org;43.84;Text mit Umlaut äöü
+33;Julia Schmidt;user33@example.com;45.21;Normaler Inhalt ohne Probleme
+34;Peter Pan;user34@test.local;46.58;Kurzer Beschreibungstext
+35;Anna Klein;user35@demo.org;47.95;Eintrag für Testzwecke
+36;Tom Test;user36@example.com;49.32;Alles gut
+37;Lisa Lang;user37@test.local;50.69;Standard Datensatz
+38;Karl Kurz;user38@demo.org;52.06;Text mit Umlaut äöü
+39;Sabine Groß;user39@example.com;53.43;Normaler Inhalt ohne Probleme
+40;Maja Becker;user40@test.local;54.8;Kurzer Beschreibungstext
+41;Jens Fischer;user41@demo.org;56.17;Eintrag für Testzwecke
+42;Kalle Braun;user42@example.com;57.54;Alles gut
+43;Biggi Sommer;user43@test.local;58.91;Standard Datensatz
+44;Niklas Berg;user44@demo.org;60.28;Text mit Umlaut äöü
+45;Max Mustermann;user45@example.com;61.65;Normaler Inhalt ohne Probleme
+46;Erika Musterfrau;user46@test.local;63.02;Kurzer Beschreibungstext
+47;Hans Müller;user47@demo.org;64.39;Eintrag für Testzwecke
+48;Julia Schmidt;user48@example.com;65.76;Alles gut
+49;Peter Pan;user49@test.local;67.13;Standard Datensatz
+50;Anna Klein;user50@demo.org;68.5;Text mit Umlaut äöü
+51;Tom Test;user51@example.com;69.87;Normaler Inhalt ohne Probleme
+52;Lisa Lang;user52@test.local;71.24;Kurzer Beschreibungstext
+53;Karl Kurz;user53@demo.org;72.61;Eintrag für Testzwecke
+54;Sabine Groß;user54@example.com;73.98;Alles gut
+55;Maja Becker;user55@test.local;75.35;Standard Datensatz
+56;Jens Fischer;user56@demo.org;76.72;Text mit Umlaut äöü
+57;Kalle Braun;user57@example.com;78.09;Normaler Inhalt ohne Probleme
+58;Biggi Sommer;user58@test.local;79.46;Kurzer Beschreibungstext
+59;Niklas Berg;user59@demo.org;80.83;Eintrag für Testzwecke
+60;Max Mustermann;user60@example.com;82.2;Alles gut
+61;Erika Musterfrau;user61@test.local;83.57;Standard Datensatz
+62;Hans Müller;user62@demo.org;84.94;Text mit Umlaut äöü
+63;Julia Schmidt;user63@example.com;86.31;Normaler Inhalt ohne Probleme
+64;Peter Pan;user64@test.local;87.68;Kurzer Beschreibungstext
+65;Anna Klein;user65@demo.org;89.05;Eintrag für Testzwecke
+66;Tom Test;user66@example.com;90.42;Alles gut
+67;Lisa Lang;user67@test.local;91.79;Standard Datensatz
+68;Karl Kurz;user68@demo.org;93.16;Text mit Umlaut äöü
+69;Sabine Groß;user69@example.com;94.53;Normaler Inhalt ohne Probleme
+70;Maja Becker;user70@test.local;95.9;Kurzer Beschreibungstext
+71;Jens Fischer;user71@demo.org;97.27;Eintrag für Testzwecke
+72;Kalle Braun;user72@example.com;98.64;Alles gut
+73;Biggi Sommer;user73@test.local;100.01;Standard Datensatz
+74;Niklas Berg;user74@demo.org;101.38;Text mit Umlaut äöü
+75;Max Mustermann;user75@example.com;102.75;Normaler Inhalt ohne Probleme
+76;Erika Musterfrau;user76@test.local;104.12;Kurzer Beschreibungstext
+77;Hans Müller;user77@demo.org;105.49;Eintrag für Testzwecke
+78;Julia Schmidt;user78@example.com;106.86;Alles gut
+79;Peter Pan;user79@test.local;108.23;Standard Datensatz
+80;Anna Klein;user80@demo.org;109.6;Text mit Umlaut äöü
+81;Tom Test;user81@example.com;110.97;Normaler Inhalt ohne Probleme
+82;Lisa Lang;user82@test.local;112.34;Kurzer Beschreibungstext
+83;Karl Kurz;user83@demo.org;113.71;Eintrag für Testzwecke
+84;Sabine Groß;user84@example.com;115.08;Alles gut
+85;Maja Becker;user85@test.local;116.45;Standard Datensatz
+86;Jens Fischer;user86@demo.org;117.82;Text mit Umlaut äöü
+87;Kalle Braun;user87@example.com;119.19;Normaler Inhalt ohne Probleme
+88;Biggi Sommer;user88@test.local;120.56;Kurzer Beschreibungstext
+89;Niklas Berg;user89@demo.org;121.93;Eintrag für Testzwecke
+90;Max Mustermann;user90@example.com;123.3;Alles gut
+91;Erika Musterfrau;user91@test.local;124.67;Standard Datensatz
+92;Hans Müller;user92@demo.org;126.04;Text mit Umlaut äöü
+93;Julia Schmidt;user93@example.com;127.41;Normaler Inhalt ohne Probleme
+94;Peter Pan;user94@test.local;128.78;Kurzer Beschreibungstext
+95;Anna Klein;user95@demo.org;130.15;Eintrag für Testzwecke
+96;Tom Test;user96@example.com;131.52;Alles gut
+97;Lisa Lang;user97@test.local;132.89;Standard Datensatz
+98;Karl Kurz;user98@demo.org;134.26;Text mit Umlaut äöü
+99;Sabine Groß;user99@example.com;135.63;Normaler Inhalt ohne Probleme
+100;Maja Becker;user100@test.local;137.0;Kurzer Beschreibungstext

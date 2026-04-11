@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$autoloadCandidates = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../vendor/autoload.php',
+];
+
+foreach ($autoloadCandidates as $autoloadFile) {
+    if (is_file($autoloadFile)) {
+        require $autoloadFile;
+
+        exit((new DynamicDataImporter\Cli\CliApplication())->run($argv));
+    }
+}
+
+fwrite(STDERR, "Error: unable to locate Composer autoload.php for demo-cli.\n");
+fwrite(STDERR, "Run `composer install` in apps/demo-cli or at the monorepo root.\n");
+
+exit(1);

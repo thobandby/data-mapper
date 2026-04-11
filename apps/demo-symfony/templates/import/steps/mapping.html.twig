@@ -1,0 +1,225 @@
+{% include 'import/_progress.html.twig' with { current_step: current_step } only %}
+{% include 'import/_flashes.html.twig' %}
+
+<div class="step-panel">
+    <div>
+        <div class="eyebrow">{{ 'step.label'|trans({'%number%': 3}) }}</div>
+        <h2 class="step-title">{{ 'mapping.title'|trans }}</h2>
+        <p class="step-subtitle mb-0">{{ 'mapping.subtitle'|trans }}</p>
+        <div class="meta-inline">
+            <span class="meta-chip">{{ 'meta.file'|trans }}: {{ file }}</span>
+            <span class="meta-chip">{{ 'meta.adapter'|trans }}: {{ ('adapter.' ~ adapter)|trans }}</span>
+            <span class="meta-chip">{{ 'meta.table'|trans }}: {{ table_name }}</span>
+            {% if delimiter %}
+                <span class="meta-chip">{{ 'meta.delimiter'|trans }}: {{ delimiter == "\t" ? 'common.tab'|trans : delimiter }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+<form method="POST" action="{{ path('import_mapping') }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('import_mapping') }}">
+    <input type="hidden" name="file" value="{{ file }}">
+    <input type="hidden" name="file_type" value="{{ file_type }}">
+    <input type="hidden" name="delimiter" value="{{ delimiter }}">
+    <input type="hidden" name="adapter" value="{{ adapter }}">
+    <input type="hidden" name="table" value="{{ table_name }}">
+    {% for col in target_columns %}
+        <input type="hidden" name="target_columns[]" value="{{ col }}">
+    {% endfor %}
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="section-card h-100">
+                <div class="card-header">
+                    <div class="eyebrow mb-2">{{ 'mapping.configuration.eyebrow'|trans }}</div>
+                    <h3 class="h4 mb-0">{{ 'mapping.configuration.title'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mapping-board">
+                        {% for header in headers %}
+                            <div class="mapping-row">
+                                <div class="mapping-box is-source">
+                                    <span class="mapping-box-label">{{ 'mapping.configuration.source_column'|trans }}</span>
+                                    <code class="mapping-box-value">{{ header }}</code>
+                                </div>
+                                <div class="mapping-arrow" aria-hidden="true">&rarr;</div>
+                                <div class="mapping-box is-target mapping-target-control">
+                                    <span class="mapping-box-label">{{ 'mapping.configuration.target'|trans }}</span>
+                                    {% if target_columns is not empty %}
+                                        <select name="mapping[{{ header }}]" class="form-select">
+                                            <option value="">{{ 'mapping.configuration.ignore'|trans }}</option>
+                                            {% for col in target_columns %}
+                                                {% if col != 'id' %}
+                                                    <option value="{{ col }}" {% if mapping[header]|default(header) == col %}selected{% endif %}>{{ col }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    {% else %}
+                                        <input type="text" name="mapping[{{ header }}]" class="form-control" value="{{ mapping[header]|default(header) }}" placeholder="{{ 'mapping.configuration.target_placeholder'|trans }}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-secondary">{{ 'mapping.configuration.refresh_preview'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if adapter == 'symfony' %}
+            <div class="col-md-6">
+                <div class="section-card h-100">
+                    <div class="card-header">
+                        <div class="eyebrow mb-2">{{ 'mapping.target_status.eyebrow'|trans }}</div>
+                        <h3 class="h4 mb-0">
+                            {% if db_initialized %}
+                                {{ 'mapping.target_status.ready'|trans }}
+                            {% else %}
+                                {{ 'mapping.target_status.preparation_required'|trans }}
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% if db_initialized %}
+                            <div class="alert alert-success border-0">
+                                {{ 'mapping.target_status.table_ready'|trans({'%table%': table_name})|raw }}
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-label small fw-bold">{{ 'mapping.target_status.available_columns'|trans({'%table%': table_name})|raw }}</div>
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for col in target_columns %}
+                                        <span class="badge-soft">{{ col }}</span>
+                                    {% else %}
+                                        <span class="text-muted small">{{ 'mapping.target_status.no_columns'|trans }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-top">
+                                <label for="existing_table_switch" class="form-label small text-muted mb-2">{{ 'mapping.target_status.switch_table'|trans }}</label>
+                                <div class="input-group input-group-sm">
+                                    <select id="existing_table_switch" class="form-select" onchange="switchImportTable('{{ path('import_mapping', {file: file, adapter: adapter, file_type: file_type}) }}', this)">
+                                        {% for table in existing_tables %}
+                                            <option value="{{ table }}" {% if table == table_name %}selected{% endif %}>{{ table }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <a href="{{ path('import_schema', {file: file, adapter: adapter, file_type: file_type, delimiter: delimiter}) }}" class="btn btn-outline-secondary">{{ 'mapping.target_status.new_table'|trans }}</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning border-0">
+                                <p class="mb-2">{{ 'mapping.target_status.table_missing'|trans({'%table%': table_name})|raw }}</p>
+                                <p class="small mb-0">{{ 'mapping.target_status.table_missing_help'|trans|raw }}</p>
+                            </div>
+
+                            <div class="d-grid mt-3">
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('setup_db_form').requestSubmit();">
+                                    {{ 'mapping.target_status.initialize_table'|trans({'%table%': table_name}) }}
+                                </button>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-top">
+                                <label for="existing_table_fallback" class="form-label small text-muted mb-2">{{ 'mapping.target_status.choose_existing'|trans }}</label>
+                                <div class="input-group input-group-sm">
+                                    <select id="existing_table_fallback" class="form-select" onchange="switchImportTable('{{ path('import_mapping', {file: file, adapter: adapter, file_type: file_type}) }}', this)">
+                                        <option value="">{{ 'mapping.target_status.choose_existing_placeholder'|trans }}</option>
+                                        {% for table in existing_tables %}
+                                            <option value="{{ table }}">{{ table }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</form>
+
+{% if adapter == 'symfony' and not db_initialized %}
+    <form id="setup_db_form" method="POST" action="{{ path('import_setup_db') }}" class="d-none">
+        <input type="hidden" name="_token" value="{{ csrf_token('import_setup_db') }}">
+        <input type="hidden" name="file" value="{{ file }}">
+        <input type="hidden" name="file_type" value="{{ file_type }}">
+        <input type="hidden" name="adapter" value="{{ adapter }}">
+        <input type="hidden" id="setup_db_table_name" name="table_name" value="{{ table_name }}">
+        {% for new_header in new_headers %}
+            <input type="hidden" name="columns[]" value="{{ new_header }}">
+        {% endfor %}
+        {% for header, mapped in mapping %}
+            <input type="hidden" name="mapping[{{ header }}]" value="{{ mapped }}">
+        {% endfor %}
+    </form>
+{% endif %}
+
+{% if sample is not empty %}
+        <div class="section-card">
+            <div class="card-header">
+                <div class="eyebrow mb-2">{{ 'mapping.preview.eyebrow'|trans }}</div>
+                <h3 class="h4 mb-0">{{ 'mapping.preview.title'|trans }}</h3>
+            </div>
+            <div class="card-body p-0">
+            <div class="table-responsive mb-0">
+                <table class="table table-bordered table-sm mb-0">
+                    <thead>
+                        <tr>
+                            {% for header in new_headers %}
+                                <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in sample %}
+                            <tr>
+                                {% for header in new_headers %}
+                                    <td>{{ row[header]|default('') }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ path('import_process') }}" class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <input type="hidden" name="_token" value="{{ csrf_token('import_process') }}">
+        <input type="hidden" name="file" value="{{ file }}">
+        <input type="hidden" name="file_type" value="{{ file_type }}">
+        <input type="hidden" name="delimiter" value="{{ delimiter }}">
+        <input type="hidden" name="adapter" value="{{ adapter }}">
+        <input type="hidden" id="process_table_name" name="table" value="{{ table_name }}">
+        {% for key, val in mapping %}
+            <input type="hidden" name="mapping[{{ key }}]" value="{{ val }}">
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-lg px-5 shadow" {% if adapter == 'symfony' and not db_initialized %}disabled{% endif %}>
+            {{ 'mapping.execute'|trans }}
+        </button>
+    </form>
+{% endif %}
+
+<div class="mt-4">
+    <a href="{{ path('import_schema', {file: file, file_type: file_type, adapter: adapter, table: table_name, delimiter: delimiter}) }}" class="btn btn-link">{{ 'mapping.back_to_schema'|trans }}</a>
+    <a href="{{ path('import_index') }}" class="btn btn-link">{{ 'mapping.restart'|trans }}</a>
+</div>
+</div>
+
+<script>
+    function switchImportTable(baseUrl, select) {
+        if (!select.value) {
+            return;
+        }
+
+        const url = `${baseUrl}&table=${encodeURIComponent(select.value)}`;
+        if (window.Turbo && typeof window.Turbo.visit === 'function') {
+            window.Turbo.visit(url, { frame: 'import_step' });
+            return;
+        }
+
+        window.location.href = url;
+    }
+</script>

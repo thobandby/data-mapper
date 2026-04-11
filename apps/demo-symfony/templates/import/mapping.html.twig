@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Mapping{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">Define Mapping</h1>
+    <p class="text-muted">Current file: <strong>{{ file }}</strong> | Adapter: <strong>{{ adapter }}</strong> | Table: <strong>{{ table_name }}</strong></p>
+
+    <form method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token('import_mapping') }}">
+        <input type="hidden" name="file" value="{{ file }}">
+        <input type="hidden" name="file_type" value="{{ file_type }}">
+        <input type="hidden" name="delimiter" value="{{ delimiter }}">
+        <input type="hidden" name="adapter" value="{{ adapter }}">
+        <input type="hidden" name="table" value="{{ table_name }}">
+        {% for col in target_columns %}
+            <input type="hidden" name="target_columns[]" value="{{ col }}">
+        {% endfor %}
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Mapping Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Original Header</th>
+                                        <th>Map To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for header in headers %}
+                                        <tr>
+                                            <td><code>{{ header }}</code></td>
+                                            <td>
+                                                {% if target_columns is not empty %}
+                                                    <select name="mapping[{{ header }}]" class="form-select form-select-sm">
+                                                        <option value="">-- Ignore --</option>
+                                                        {% for col in target_columns %}
+                                                            {% if col != 'id' %}
+                                                                <option value="{{ col }}" {% if mapping[header]|default(header) == col %}selected{% endif %}>{{ col }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                {% else %}
+                                                    <input type="text" name="mapping[{{ header }}]" class="form-control form-control-sm" value="{{ mapping[header]|default(header) }}">
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-secondary">Update Preview</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if adapter == 'symfony' %}
+                <div class="col-md-6">
+                    <div class="card h-100 border-{% if db_initialized %}success{% else %}warning{% endif %}">
+                        <div class="card-header bg-{% if db_initialized %}success text-white{% else %}warning{% endif %}">
+                            <h5 class="mb-0">
+                                <i class="bi bi-db"></i>
+                                {% if db_initialized %}
+                                    Table Status: Active
+                                {% else %}
+                                    Table Status: Missing
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if db_initialized %}
+                                <div class="alert alert-success border-0 bg-light">
+                                    <i class="bi bi-check-circle-fill"></i> Target table <code>{{ table_name }}</code> is initialized and ready.
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Available columns in <code>{{ table_name }}</code>:</label>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for col in target_columns %}
+                                            <span class="badge bg-secondary">{{ col }}</span>
+                                        {% else %}
+                                            <span class="text-muted small">No columns found.</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-top">
+                                    <p class="small text-muted mb-2">Switch to another existing table:</p>
+                                    <div class="input-group input-group-sm">
+                                        <select class="form-select" onchange="window.location.href='{{ path('import_mapping', {file: file, adapter: adapter, file_type: file_type}) }}&table=' + this.value;">
+                                            {% for table in existing_tables %}
+                                                <option value="{{ table }}" {% if table == table_name %}selected{% endif %}>{{ table }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <a href="{{ path('import_schema', {file: file, adapter: adapter, file_type: file_type}) }}" class="btn btn-outline-secondary">Configure New</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning border-0 bg-light">
+                                    <p class="mb-2"><i class="bi bi-exclamation-triangle-fill"></i> The target table <code>{{ table_name }}</code> does not exist.</p>
+                                    <p class="small mb-0">You can create it now using the <strong>mapped field names</strong> defined on the left.</p>
+                                </div>
+
+                                <div class="d-grid mt-3">
+                                    <button type="button" class="btn btn-warning" onclick="document.getElementById('setup_db_form').submit();">
+                                        <i class="bi bi-plus-square"></i> Initialize Table "{{ table_name }}"
+                                    </button>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-top">
+                                    <p class="small text-muted mb-2">Or select an existing table:</p>
+                                    <div class="input-group input-group-sm">
+                                        <select class="form-select" onchange="window.location.href='{{ path('import_mapping', {file: file, adapter: adapter, file_type: file_type}) }}&table=' + this.value;">
+                                            <option value="">-- Choose existing --</option>
+                                            {% for table in existing_tables %}
+                                                <option value="{{ table }}">{{ table }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if adapter == 'symfony' and not db_initialized %}
+        <form id="setup_db_form" method="POST" action="{{ path('import_setup_db') }}" style="display: none;">
+            <input type="hidden" name="_token" value="{{ csrf_token('import_setup_db') }}">
+            <input type="hidden" name="file" value="{{ file }}">
+            <input type="hidden" name="file_type" value="{{ file_type }}">
+            <input type="hidden" name="adapter" value="{{ adapter }}">
+            <input type="hidden" id="setup_db_table_name" name="table_name" value="{{ table_name }}">
+            {% for new_header in new_headers %}
+                {% if adapter == 'symfony' and not db_initialized %}
+                    <input type="hidden" name="columns[]" value="{{ new_header }}">
+                {% endif %}
+            {% endfor %}
+            {% for header, mapped in mapping %}
+                {% if adapter == 'symfony' and not db_initialized %}
+                    <input type="hidden" name="mapping[{{ header }}]" value="{{ mapped }}">
+                {% endif %}
+            {% endfor %}
+        </form>
+    {% endif %}
+
+    {% if sample is not empty %}
+        <hr class="my-5">
+        <h2 class="mb-3">Preview (Top 5 rows)</h2>
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered table-sm">
+                <thead class="bg-light text-center">
+                    <tr>
+                        {% for header in new_headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in sample %}
+                        <tr>
+                            {% for header in new_headers %}
+                                <td>{{ row[header]|default('') }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="POST" action="{{ path('import_process') }}" class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <input type="hidden" name="_token" value="{{ csrf_token('import_process') }}">
+            <input type="hidden" name="file" value="{{ file }}">
+            <input type="hidden" name="file_type" value="{{ file_type }}">
+            <input type="hidden" name="delimiter" value="{{ delimiter }}">
+            <input type="hidden" name="adapter" value="{{ adapter }}">
+            <input type="hidden" id="process_table_name" name="table" value="{{ table_name }}">
+            {% for key, val in mapping %}
+                <input type="hidden" name="mapping[{{ key }}]" value="{{ val }}">
+            {% endfor %}
+            <button type="submit" class="btn btn-success btn-lg px-5 shadow" {% if adapter == 'symfony' and not db_initialized %}disabled{% endif %}>
+                Execute Import
+            </button>
+        </form>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ path('import_schema', {file: file, file_type: file_type, adapter: adapter, table: table_name}) }}" class="btn btn-link">Back to Schema Selection</a>
+        <a href="{{ path('import_index') }}" class="btn btn-link">Cancel and Start Over</a>
+    </div>
+{% endblock %}

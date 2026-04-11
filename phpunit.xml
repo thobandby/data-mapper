@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+  <testsuites>
+    <testsuite name="core">
+      <directory>packages/core/tests</directory>
+    </testsuite>
+    <testsuite name="cli-adapter">
+      <directory>packages/cli-adapter/tests</directory>
+    </testsuite>
+    <testsuite name="doctrine-adapter">
+      <directory>packages/doctrine-adapter/tests</directory>
+    </testsuite>
+    <testsuite name="symfony-adapter">
+      <directory>packages/symfony-adapter/tests</directory>
+    </testsuite>
+    <testsuite name="demo-symfony">
+      <directory>apps/demo-symfony/tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

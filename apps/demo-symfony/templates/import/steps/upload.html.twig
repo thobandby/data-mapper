@@ -1,0 +1,89 @@
+{% include 'import/_progress.html.twig' with { current_step: current_step } only %}
+{% include 'import/_flashes.html.twig' %}
+
+<div class="step-panel">
+    <div>
+        <div class="eyebrow">{{ 'step.label'|trans({'%number%': 1}) }}</div>
+        <h2 class="step-title">{{ 'upload.title'|trans }}</h2>
+        <p class="step-subtitle mb-0">{{ 'upload.subtitle'|trans }}</p>
+    </div>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-7">
+            <form method="POST" action="{{ path('import_index') }}" enctype="multipart/form-data" class="section-card p-4">
+                <input type="hidden" name="_token" value="{{ csrf_token('import') }}">
+
+                <div class="mb-4">
+                    <label for="file" class="form-label fw-semibold">{{ 'upload.form.file'|trans }}</label>
+                    <input type="file" id="file" name="file" class="form-control" accept=".csv,.xls,.xlsx,.json,.xml,text/csv,application/json,application/xml,text/xml,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
+                    <div class="form-text">{{ 'upload.form.file_help'|trans }}</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="file_type" class="form-label fw-semibold">{{ 'upload.form.file_type'|trans }}</label>
+                    <select name="file_type" id="file_type" class="form-select">
+                        <option value="auto">{{ 'upload.form.file_type_auto'|trans }}</option>
+                        <option value="csv">CSV</option>
+                        <option value="xlsx">{{ 'upload.form.file_type_xlsx'|trans }}</option>
+                        <option value="xls">{{ 'upload.form.file_type_xls'|trans }}</option>
+                        <option value="json">JSON</option>
+                        <option value="xml">XML</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="adapter" class="form-label fw-semibold">{{ 'upload.form.adapter'|trans }}</label>
+                    <select name="adapter" id="adapter" class="form-select">
+                        <option value="memory">{{ 'adapter.memory'|trans }}</option>
+                        <option value="symfony">{{ 'adapter.symfony'|trans }}</option>
+                        <option value="json">{{ 'adapter.json'|trans }}</option>
+                        <option value="xml">{{ 'adapter.xml'|trans }}</option>
+                        <option value="sql">{{ 'adapter.sql'|trans }}</option>
+                    </select>
+                    <div class="form-text">{{ 'upload.form.adapter_help'|trans }}</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="delimiter" class="form-label fw-semibold">{{ 'upload.form.delimiter'|trans }}</label>
+                    <input type="text" id="delimiter" name="delimiter" class="form-control" maxlength="1" placeholder="{{ 'upload.form.delimiter_placeholder'|trans }}">
+                    <div class="form-text">{{ 'upload.form.delimiter_help'|trans }}</div>
+                </div>
+
+                <div class="alert alert-secondary small mb-4">
+                    {{ 'upload.form.security_hint'|trans({'%size%': max_upload_size_mb}) }}
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 align-items-center">
+                    <button type="submit" class="btn btn-primary px-4">{{ 'upload.form.submit'|trans }}</button>
+                    <a href="{{ path('api_docs') }}" class="btn btn-outline-secondary" target="_blank" rel="noreferrer">{{ 'upload.form.api_docs'|trans }}</a>
+                    <span class="text-muted small">{{ 'upload.form.next_hint'|trans }}</span>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="section-card p-4 h-100">
+                <div class="eyebrow">{{ 'upload.use_cases.eyebrow'|trans }}</div>
+                <h3 class="h4 mb-3">{{ 'upload.use_cases.title'|trans }}</h3>
+                <div class="d-grid gap-3">
+                    <div class="surface-muted p-3">
+                        <div class="fw-semibold mb-1">{{ 'upload.use_cases.analysis_title'|trans }}</div>
+                        <div class="small text-muted">{{ 'upload.use_cases.analysis_text'|trans }}</div>
+                    </div>
+                    <div class="surface-muted p-3">
+                        <div class="fw-semibold mb-1">{{ 'upload.use_cases.schema_title'|trans }}</div>
+                        <div class="small text-muted">{{ 'upload.use_cases.schema_text'|trans }}</div>
+                    </div>
+                    <div class="surface-muted p-3">
+                        <div class="fw-semibold mb-1">{{ 'upload.use_cases.modes_title'|trans }}</div>
+                        <div class="small text-muted">{{ 'upload.use_cases.modes_text'|trans }}</div>
+                    </div>
+                    <div class="surface-muted p-3">
+                        <div class="fw-semibold mb-1">{{ 'upload.use_cases.api_title'|trans }}</div>
+                        <div class="small text-muted">{{ 'upload.use_cases.api_text'|trans }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

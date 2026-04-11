@@ -1,0 +1,39 @@
+services:
+    DynamicDataImporter\Application\UseCase\AnalyzeFile:
+        public: true
+
+    DynamicDataImporter\Application\UseCase\ImportFile:
+        arguments:
+            $persister: '@DynamicDataImporter\Port\Persistence\PersisterInterface'
+        public: true
+
+    DynamicDataImporter\Port\Persistence\PersisterInterface:
+        class: DynamicDataImporter\Doctrine\Persistence\DoctrinePersister
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+    DynamicDataImporter\Doctrine\Schema\SchemaManager:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        public: true
+
+    DynamicDataImporter\Doctrine\Schema\SchemaManagerInterface:
+        alias: DynamicDataImporter\Doctrine\Schema\SchemaManager
+
+    DynamicDataImporter\Symfony\Messenger\ImportFileHandler:
+        arguments:
+            $importFile: '@DynamicDataImporter\Application\UseCase\ImportFile'
+            $persister: '@DynamicDataImporter\Port\Persistence\PersisterInterface'
+        tags: [messenger.message_handler]
+
+    DynamicDataImporter\Symfony\Messenger\SetupDatabaseHandler:
+        arguments:
+            $schemaManager: '@DynamicDataImporter\Doctrine\Schema\SchemaManager'
+        tags: [messenger.message_handler]
+
+    DynamicDataImporter\Symfony\Validation\SymfonyValidator:
+        arguments:
+            $validator: '@validator'
+        # This service should probably be defined as prototype or handled via a factory
+        # if different constraints are needed per use case.
+        # For now, we leave it as a base for manual wiring or decoration.

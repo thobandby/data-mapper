@@ -1,0 +1,197 @@
+app:
+  title: "Dynamic Data Importer Demo"
+  kicker: "Dynamic Data Importer"
+
+locale:
+  de: "DE"
+  en: "EN"
+
+common:
+  close: "Schließen"
+  active: "Aktiv"
+  tab: "TAB"
+
+step:
+  label: "Schritt %number%"
+
+progress:
+  upload: "Upload"
+  schema: "Schema"
+  mapping: "Mapping"
+  result: "Ergebnis"
+  current: "Aktiv"
+  pending: "Ausstehend"
+
+meta:
+  file: "Datei"
+  adapter: "Adapter"
+  table: "Tabelle"
+  delimiter: "Delimiter"
+
+adapter:
+  memory: "Testlauf"
+  symfony: "Datenbankimport via Doctrine"
+  json: "JSON-Export"
+  xml: "XML-Export"
+  sql: "SQL-Export (inkl. Schema)"
+
+wizard:
+  header:
+    title: "Dateiimport als technischer Workflow"
+    description: "Die Demo führt durch Upload, Schema-Prüfung, Feld-Mapping und Ausführung. Sie bildet In-Memory-Läufe, JSON-, XML- und SQL-Export, Symfony-Persistierung und asynchrone API-Imports aus einer Oberfläche heraus ab."
+
+upload:
+  title: "Quelldatei und Zielmodus wählen"
+  subtitle: "Lade CSV, Excel, JSON oder XML hoch und entscheide, ob du erst nur validieren, ein JSON-, XML- oder SQL-Artefakt erzeugen oder in Symfony persistieren willst."
+  error:
+    no_file_uploaded: "Bitte wähle eine Datei für den Import aus."
+    unsupported_file_type: "Nicht unterstützter Dateityp: %type%"
+    unsupported_adapter: "Nicht unterstützter Adapter: %adapter%"
+    upload_failed: "Datei-Upload fehlgeschlagen: %reason%"
+    file_too_large: "Die Datei ist zu groß. Die öffentliche Demo akzeptiert derzeit maximal %size% MB."
+    invalid_mime: "Der Dateiinhalt passt nicht zum gewählten %type%-Format."
+    rate_limited: "Zu viele Upload-Versuche. Bitte warte %seconds% Sekunden, bevor du es erneut versuchst."
+  form:
+    file: "Quelldatei"
+    file_help: "Unterstützt werden CSV, Excel (`.xlsx`, `.xls`), JSON und XML."
+    file_type: "Dateityp"
+    file_type_auto: "Automatisch per Dateiendung erkennen"
+    file_type_xlsx: "Excel (XLSX)"
+    file_type_xls: "Excel (XLS)"
+    adapter: "Zieladapter"
+    adapter_help: "Der Wizard zeigt danach nur die Schritte, die für den gewählten Lauf relevant sind."
+    delimiter: "CSV-Delimiter optional überschreiben"
+    delimiter_placeholder: "leer lassen für Auto-Detection"
+    delimiter_help: "Nur für CSV relevant. Beispiel: `,`, `;` oder Tab."
+    submit: "Weiter zur Vorschau"
+    api_docs: "API-Dokumentation"
+    next_hint: "Im nächsten Schritt werden Header, Beispielzeilen und bei Symfony vorhandene Tabellen geladen."
+    security_hint: "Öffentliche Demo-Limits: maximal %size% MB pro Datei, Inhaltsprüfung und Rate Limiting für Upload und API."
+  use_cases:
+    eyebrow: "Use Cases"
+    title: "Was die Demo bereits abbildet"
+    analysis_title: "Dateianalyse vor dem Lauf"
+    analysis_text: "Header, Beispielzeilen und Mapping-Effekte lassen sich prüfen, bevor Daten geschrieben werden."
+    schema_title: "Schema- und Tabellensteuerung"
+    schema_text: "Für Symfony können bestehende Tabellen gewählt oder neue Tabellenfelder vorbereitet und initialisiert werden."
+    modes_title: "Ausführungsmodi"
+    modes_text: "In-Memory für schnelle Prüfungen, JSON-, XML- oder SQL-Artefakte sowie Symfony für persistierte oder asynchrone Imports."
+    api_title: "API und Job-Status"
+    api_text: "Die Demo enthält OpenAPI-Docs sowie Status-Endpunkte für Messenger-basierte Hintergrundjobs."
+
+schema:
+  title: "Zielschema und Struktur prüfen"
+  subtitle: "In diesem Schritt wird sichtbar, welche Quelldaten wirklich ankommen. Für Symfony definierst du hier zusätzlich die Zieltabelle oder bereitest neue Felder vor."
+  submit: "Weiter zum Mapping"
+  back: "Zurück zum Upload"
+  storage:
+    eyebrow: "Storage Target"
+    title: "Zieltabelle festlegen"
+    existing_table: "Bestehende Tabelle wählen"
+    new_table_option: "-- Neue Tabelle konfigurieren --"
+    new_table_name: "Name der neuen Tabelle"
+    new_table_placeholder: "imported_rows"
+    new_table_help: "Die Tabelle wird im nächsten Schritt anhand der gewählten Feldnamen initialisiert."
+    suggested_columns: "Vorgeschlagene Tabellenfelder"
+    add_column: "Feld ergänzen"
+    column_name: "Feldname"
+    column_placeholder: "column_name"
+    additional_field: "Zusätzliches Feld"
+  preview:
+    eyebrow: "Preview"
+    title: "Vorschau der Quelldaten"
+
+mapping:
+  title: "Felder zuordnen und Ziel prüfen"
+  subtitle: "Ordne Quellspalten auf Zielattribute zu, lasse Felder bewusst weg und kontrolliere die resultierende Vorschau vor dem eigentlichen Lauf."
+  execute: "Import ausführen"
+  back_to_schema: "Zurück zur Schema-Auswahl"
+  restart: "Abbrechen und neu starten"
+  configuration:
+    eyebrow: "Configuration"
+    title: "Feld-Mapping"
+    source_column: "Quellspalte"
+    target: "Ziel"
+    ignore: "-- Ignorieren --"
+    target_placeholder: "target_field"
+    refresh_preview: "Vorschau aktualisieren"
+  target_status:
+    eyebrow: "Target Status"
+    ready: "Ziel ist bereit"
+    preparation_required: "Vorbereitung erforderlich"
+    table_ready: "Die Zieltabelle <code>%table%</code> ist vorhanden und kann direkt importiert werden."
+    available_columns: "Verfügbare Spalten in <code>%table%</code>:"
+    no_columns: "Keine Spalten gefunden."
+    switch_table: "Auf eine andere bestehende Tabelle wechseln:"
+    new_table: "Neue Tabelle"
+    table_missing: "Die Zieltabelle <code>%table%</code> existiert noch nicht."
+    table_missing_help: "Du kannst sie jetzt aus den <strong>gemappten Feldnamen</strong> initialisieren oder auf eine vorhandene Tabelle wechseln."
+    initialize_table: "Tabelle \"%table%\" initialisieren"
+    choose_existing: "Oder eine bestehende Tabelle wählen:"
+    choose_existing_placeholder: "-- Bestehende Tabelle wählen --"
+  preview:
+    eyebrow: "Preview"
+    title: "Resultierende Vorschau"
+
+result:
+  title: "Laufstatus und Ergebnis"
+  subtitle: "Prüfe die Ausführung, erkenne Zeilenfehler sofort und lade bei JSON-, XML- oder SQL-Läufen das erzeugte Artefakt direkt herunter."
+  restart: "Neue Datei importieren"
+  stats:
+    processed: "Verarbeitet"
+    imported: "Importiert"
+    errors: "Fehler"
+  validation:
+    eyebrow: "Validation"
+    title: "Fehlerdetails"
+    row: "Zeile"
+    error: "Fehler"
+  export:
+    eyebrow: "Export"
+    title: "%format%-Artefakt steht bereit"
+    description: "Lade die erzeugte %format%-Datei herunter, um das Ergebnis weiterzugeben oder extern zu prüfen."
+    download: "%format% herunterladen"
+  async:
+    eyebrow: "Background Job"
+    title: "Import als Hintergrundjob gestartet"
+    description: "Job <code>%job_id%</code> wurde an Messenger übergeben. Der Status wird in dieser Ansicht automatisch aktualisiert, sobald ein Worker den Auftrag verarbeitet."
+    status: "Status"
+    status_endpoint: "Status-Endpoint"
+    payload_pending: "Die API liefert zusätzlich Ergebnisdaten oder Fehlermeldungen, sobald der Job abgeschlossen ist."
+    consume_hint: "Starte in der Demo-App <code>php bin/console messenger:consume async_imports</code>, damit der Hintergrundimport abgearbeitet wird."
+    payload_error: "Fehler"
+    payload_result: "Ergebnis"
+    payload_running: "Job angenommen. Ergebnisdaten werden nach Abschluss eingeblendet."
+    payload_failed_poll: "Statusabfrage fehlgeschlagen. Der Endpoint bleibt trotzdem direkt nutzbar."
+
+flash:
+  invalid_csrf: "Ungültiges CSRF-Token."
+  db_table_creation_dispatched: "Erstellung der Datenbanktabelle wurde eingeplant."
+  setup_dispatch_failed: "Setup-Task konnte nicht eingeplant werden: %reason%"
+  db_setup_dispatched: "Datenbank-Setup wurde eingeplant. Tabelle \"%table%\" wird im Hintergrund erstellt."
+  import_queued: "Import wurde eingeplant. Über den Job-Status-Endpoint kannst du den Fortschritt verfolgen."
+  artifact_saved: "%format%-Artefakt gespeichert unter: %path%"
+  download_not_found: "Download-Datei wurde nicht gefunden."
+
+api:
+  error:
+    no_file_uploaded: "Bitte lade eine Datei hoch."
+    unsupported_file_type: "Nicht unterstützter Dateityp: %type%"
+    unsupported_adapter: "Nicht unterstützter Adapter: %adapter%"
+    upload_failed: "Datei-Upload fehlgeschlagen: %reason%"
+    invalid_mapping_json: "Das Mapping muss valides JSON sein."
+    job_not_found: "Import-Job wurde nicht gefunden."
+    file_too_large: "Die Datei ist zu groß. Die öffentliche Demo akzeptiert derzeit maximal %size% MB."
+    invalid_mime: "Der Dateiinhalt passt nicht zum gewählten %type%-Format."
+    rate_limited: "Zu viele Anfragen. Bitte warte %seconds% Sekunden, bevor du es erneut versuchst."
+
+import:
+  error:
+    invalid_json: "Die JSON-Datei ist ungültig. Bitte prüfe Syntax, Kommata und Anführungszeichen."
+    invalid_xml: "Die XML-Datei ist ungültig. Bitte prüfe Tags, Attribute und Sonderzeichen."
+    cannot_read: "Die Quelldatei konnte nicht gelesen werden. Bitte lade sie erneut hoch."
+    unsupported_file_type: "Dieser Dateityp wird in der Demo nicht unterstützt."
+    generic: "Die Quelldatei konnte nicht verarbeitet werden. Bitte prüfe Format und Inhalt der Datei."
+    invalid_csv: "Die CSV-Datei ist ungültig. Bitte prüfe Trennzeichen, Anführungszeichen und Zeilenumbrüche."
+    invalid_csv_column_count: "Die CSV-Datei ist in Zeile %line% beschädigt: erwartet wurden %expected% Spalten, gefunden wurden %actual%."
+    invalid_csv_unclosed_quote: "Die CSV-Datei ist ab Zeile %line% beschädigt: ein Textfeld wurde nicht korrekt geschlossen."

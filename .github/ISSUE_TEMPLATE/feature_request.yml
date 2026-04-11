@@ -1,0 +1,10 @@
+name: Feature request
+description: Suggest an idea
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: What problem does this solve?
+    validations:
+      required: true

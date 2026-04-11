@@ -1,0 +1,183 @@
+{% include 'import/_progress.html.twig' with { current_step: current_step } only %}
+{% include 'import/_flashes.html.twig' %}
+
+<div class="step-panel">
+    <div>
+        <div class="eyebrow">{{ 'step.label'|trans({'%number%': 2}) }}</div>
+        <h2 class="step-title">{{ 'schema.title'|trans }}</h2>
+        <p class="step-subtitle mb-0">{{ 'schema.subtitle'|trans }}</p>
+        <div class="meta-inline">
+            <span class="meta-chip">{{ 'meta.file'|trans }}: {{ file }}</span>
+            <span class="meta-chip">{{ 'meta.adapter'|trans }}: {{ ('adapter.' ~ adapter)|trans }}</span>
+            {% if delimiter %}
+                <span class="meta-chip">{{ 'meta.delimiter'|trans }}: {{ delimiter == "\t" ? 'common.tab'|trans : delimiter }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+<form method="POST" action="{{ path('import_schema') }}" class="step-panel">
+    <input type="hidden" name="_token" value="{{ csrf_token('import_schema') }}">
+    <input type="hidden" name="file" value="{{ file }}">
+    <input type="hidden" name="file_type" value="{{ file_type }}">
+    <input type="hidden" name="adapter" value="{{ adapter }}">
+    <input type="hidden" name="delimiter" value="{{ delimiter }}">
+
+    {% if adapter == 'symfony' %}
+        <div class="section-card">
+            <div class="card-header">
+                <div class="eyebrow mb-2">{{ 'schema.storage.eyebrow'|trans }}</div>
+                <h3 class="h4 mb-0">{{ 'schema.storage.title'|trans }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="existing_table" class="form-label fw-semibold">{{ 'schema.storage.existing_table'|trans }}</label>
+                    <select name="table" id="existing_table" class="form-select">
+                        <option value="">{{ 'schema.storage.new_table_option'|trans }}</option>
+                        {% for table in existing_tables %}
+                            <option value="{{ table }}" {% if table == table_name %}selected{% endif %}>{{ table }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div id="new_table_setup" style="display: {% if table_name and table_name in existing_tables %}none{% else %}block{% endif %};">
+                    <div class="mb-4">
+                        <label for="table_name" class="form-label fw-semibold">{{ 'schema.storage.new_table_name'|trans }}</label>
+                        <input type="text" id="table_name" name="new_table_name" class="form-control" value="{{ table_name }}" placeholder="{{ 'schema.storage.new_table_placeholder'|trans }}" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                        <div class="form-text">{{ 'schema.storage.new_table_help'|trans }}</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h4 class="h5 mb-0">{{ 'schema.storage.suggested_columns'|trans }}</h4>
+                        <button type="button" id="add_column_btn" class="btn btn-outline-secondary btn-sm" onclick="addRow()" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                            {{ 'schema.storage.add_column'|trans }}
+                        </button>
+                    </div>
+                    <div class="schema-column-board" id="columns_board">
+                        {% for header in headers %}
+                            <div class="schema-column-row">
+                                <div class="mapping-box is-source">
+                                    <span class="mapping-box-label">{{ 'mapping.configuration.source_column'|trans }}</span>
+                                    <span class="mapping-box-value">{{ header }}</span>
+                                </div>
+                                <div class="mapping-arrow" aria-hidden="true">&rarr;</div>
+                                <div class="mapping-box is-target mapping-target-control">
+                                    <input type="hidden" name="source_headers[{{ loop.index0 }}]" value="{{ header }}">
+                                    <span class="mapping-box-label">{{ 'schema.storage.column_name'|trans }}</span>
+                                    <input type="text" name="columns[{{ loop.index0 }}]" class="form-control" value="{{ header }}" placeholder="{{ 'schema.storage.column_placeholder'|trans }}" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                                </div>
+                                <label class="schema-column-toggle">
+                                    <span class="schema-column-toggle-label">{{ 'common.active'|trans }}</span>
+                                    <span class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="selected_columns[]" value="{{ loop.index0 }}" checked {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                                    </span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if sample is not empty %}
+        <div class="section-card">
+            <div class="card-header">
+                <div class="eyebrow mb-2">{{ 'schema.preview.eyebrow'|trans }}</div>
+                <h3 class="h4 mb-0">{{ 'schema.preview.title'|trans }}</h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0 schema-preview-table">
+                        <thead>
+                            <tr>
+                                {% for header in headers %}
+                                    <th class="small">{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in sample %}
+                                <tr>
+                                    {% for header in headers %}
+                                        {% set value = row[header] ?? '' %}
+                                        <td class="small text-truncate" style="max-width: 150px;">{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+        <button type="submit" class="btn btn-primary px-4">{{ 'schema.submit'|trans }}</button>
+        <a href="{{ path('import_index') }}" class="btn btn-link">{{ 'schema.back'|trans }}</a>
+    </div>
+</form>
+</div>
+
+<script>
+    (() => {
+        const rowIndexKey = '__importSchemaRowIndex';
+        window[rowIndexKey] = {{ headers|length }};
+
+        const existingTableSelect = document.getElementById('existing_table');
+        if (existingTableSelect && !existingTableSelect.dataset.boundSchemaStep) {
+            existingTableSelect.dataset.boundSchemaStep = 'true';
+            existingTableSelect.addEventListener('change', function() {
+                const newTableSetup = document.getElementById('new_table_setup');
+                const isExistingTable = this.value !== '';
+
+                newTableSetup.style.display = isExistingTable ? 'none' : 'block';
+
+                const tableNameInput = document.getElementById('table_name');
+                const addColumnButton = document.getElementById('add_column_btn');
+                if (tableNameInput) {
+                    tableNameInput.disabled = isExistingTable;
+                }
+                if (addColumnButton) {
+                    addColumnButton.disabled = isExistingTable;
+                }
+
+                document.querySelectorAll('#columns_board input, #columns_board button').forEach((element) => {
+                    element.disabled = isExistingTable;
+                });
+            });
+        }
+
+        window.addRow = () => {
+            const board = document.getElementById('columns_board');
+            if (!board) {
+                return;
+            }
+
+            const rowIndex = window[rowIndexKey];
+            const columnPlaceholder = '{{ 'schema.storage.column_placeholder'|trans|e('js') }}';
+            const additionalFieldLabel = '{{ 'schema.storage.additional_field'|trans|e('js') }}';
+            const row = document.createElement('div');
+            row.className = 'schema-column-row';
+            row.innerHTML = `
+                <div class="mapping-box is-source">
+                    <span class="mapping-box-label">{{ 'mapping.configuration.source_column'|trans|e('js') }}</span>
+                    <span class="mapping-box-value">${additionalFieldLabel}</span>
+                </div>
+                <div class="mapping-arrow" aria-hidden="true">&rarr;</div>
+                <div class="mapping-box is-target mapping-target-control">
+                    <input type="hidden" name="source_headers[${rowIndex}]" value="">
+                    <span class="mapping-box-label">{{ 'schema.storage.column_name'|trans|e('js') }}</span>
+                    <input type="text" name="columns[${rowIndex}]" class="form-control" placeholder="${columnPlaceholder}">
+                </div>
+                <label class="schema-column-toggle">
+                    <span class="schema-column-toggle-label">{{ 'common.active'|trans|e('js') }}</span>
+                    <span class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="selected_columns[]" value="${rowIndex}" checked>
+                    </span>
+                </label>
+            `;
+            board.appendChild(row);
+            window[rowIndexKey] = rowIndex + 1;
+        };
+    })();
+</script>

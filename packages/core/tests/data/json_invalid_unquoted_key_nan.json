@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Max Mustermann",
+    email: "max@example.com",
+    "price": NaN,
+    "description": "Unquoted key and invalid number"
+  }
+]

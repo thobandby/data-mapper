@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.title'|trans }}{% endblock %}
+
+{% block body %}
+    <section class="app-frame">
+        <div class="wizard-header">
+            <div class="d-flex flex-wrap justify-content-between gap-3 align-items-start">
+                <div>
+                    <div class="wizard-kicker">{{ 'app.kicker'|trans }}</div>
+                    <h1 class="mb-3">{{ 'wizard.header.title'|trans }}</h1>
+                    <p>{{ 'wizard.header.description'|trans }}</p>
+                </div>
+                <div class="d-flex gap-2">
+                    {% set current_locale = app.request.locale|default('de') %}
+                    {% set base_query = app.request.query.all|merge({_frame: null}) %}
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(base_query)|merge({locale: 'de'})) }}" class="btn btn-sm {{ current_locale == 'de' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                        {{ 'locale.de'|trans }}
+                    </a>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(base_query)|merge({locale: 'en'})) }}" class="btn btn-sm {{ current_locale == 'en' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                        {{ 'locale.en'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-body">
+            <turbo-frame id="import_step">
+                {% include step_template with step_context only %}
+            </turbo-frame>
+        </div>
+    </section>
+{% endblock %}

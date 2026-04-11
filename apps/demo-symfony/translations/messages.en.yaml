@@ -1,0 +1,197 @@
+app:
+  title: "Dynamic Data Importer Demo"
+  kicker: "Dynamic Data Importer"
+
+locale:
+  de: "DE"
+  en: "EN"
+
+common:
+  close: "Close"
+  active: "Active"
+  tab: "TAB"
+
+step:
+  label: "Step %number%"
+
+progress:
+  upload: "Upload"
+  schema: "Schema"
+  mapping: "Mapping"
+  result: "Result"
+  current: "Active"
+  pending: "Pending"
+
+meta:
+  file: "File"
+  adapter: "Adapter"
+  table: "Table"
+  delimiter: "Delimiter"
+
+adapter:
+  memory: "Dry run"
+  symfony: "Database import via Doctrine"
+  json: "JSON export"
+  xml: "XML export"
+  sql: "SQL export (incl. schema)"
+
+wizard:
+  header:
+    title: "File import as a technical workflow"
+    description: "The demo walks through upload, schema review, field mapping, and execution. It covers in-memory runs, JSON, XML, and SQL export, Symfony persistence, and asynchronous API imports from a single interface."
+
+upload:
+  title: "Choose source file and target mode"
+  subtitle: "Upload CSV, Excel, JSON, or XML and decide whether to validate first, generate a JSON, XML, or SQL artifact, or persist into Symfony."
+  error:
+    no_file_uploaded: "Please select a file to import."
+    unsupported_file_type: "Unsupported file type: %type%"
+    unsupported_adapter: "Unsupported adapter: %adapter%"
+    upload_failed: "File upload failed: %reason%"
+    file_too_large: "The file is too large. The public demo currently accepts up to %size% MB."
+    invalid_mime: "The uploaded file content does not match the selected %type% format."
+    rate_limited: "Too many upload attempts. Please wait %seconds% seconds before trying again."
+  form:
+    file: "Source file"
+    file_help: "Supported formats are CSV, Excel (`.xlsx`, `.xls`), JSON, and XML."
+    file_type: "File type"
+    file_type_auto: "Detect automatically from file extension"
+    file_type_xlsx: "Excel (XLSX)"
+    file_type_xls: "Excel (XLS)"
+    adapter: "Target adapter"
+    adapter_help: "The wizard will then show only the steps relevant for the selected run."
+    delimiter: "Optionally override CSV delimiter"
+    delimiter_placeholder: "leave empty for auto detection"
+    delimiter_help: "Relevant only for CSV. Example: `,`, `;`, or tab."
+    submit: "Continue to preview"
+    api_docs: "API documentation"
+    next_hint: "The next step loads headers, sample rows, and existing tables for Symfony."
+    security_hint: "Public demo limits: max %size% MB per file, content-type checks, and rate limiting on upload and API endpoints."
+  use_cases:
+    eyebrow: "Use Cases"
+    title: "What the demo already covers"
+    analysis_title: "File analysis before execution"
+    analysis_text: "Headers, sample rows, and mapping effects can be reviewed before any data is written."
+    schema_title: "Schema and table control"
+    schema_text: "For Symfony, you can select existing tables or prepare and initialize new table columns."
+    modes_title: "Execution modes"
+    modes_text: "In-memory for quick checks, JSON, XML, or SQL artifacts, and Symfony for persisted or asynchronous imports."
+    api_title: "API and job status"
+    api_text: "The demo includes OpenAPI docs and status endpoints for Messenger-based background jobs."
+
+schema:
+  title: "Review target schema and structure"
+  subtitle: "This step reveals which source data actually arrives. For Symfony, you also define the target table or prepare new fields here."
+  submit: "Continue to mapping"
+  back: "Back to upload"
+  storage:
+    eyebrow: "Storage Target"
+    title: "Define target table"
+    existing_table: "Choose existing table"
+    new_table_option: "-- Configure new table --"
+    new_table_name: "New table name"
+    new_table_placeholder: "imported_rows"
+    new_table_help: "The table will be initialized in the next step using the selected field names."
+    suggested_columns: "Suggested table columns"
+    add_column: "Add column"
+    column_name: "Column name"
+    column_placeholder: "column_name"
+    additional_field: "Additional field"
+  preview:
+    eyebrow: "Preview"
+    title: "Source data preview"
+
+mapping:
+  title: "Map fields and verify target"
+  subtitle: "Map source columns to target attributes, intentionally omit fields, and inspect the resulting preview before the actual run."
+  execute: "Run import"
+  back_to_schema: "Back to schema selection"
+  restart: "Cancel and start over"
+  configuration:
+    eyebrow: "Configuration"
+    title: "Field mapping"
+    source_column: "Source column"
+    target: "Target"
+    ignore: "-- Ignore --"
+    target_placeholder: "target_field"
+    refresh_preview: "Refresh preview"
+  target_status:
+    eyebrow: "Target Status"
+    ready: "Target is ready"
+    preparation_required: "Preparation required"
+    table_ready: "Target table <code>%table%</code> exists and can be imported into directly."
+    available_columns: "Available columns in <code>%table%</code>:"
+    no_columns: "No columns found."
+    switch_table: "Switch to another existing table:"
+    new_table: "New table"
+    table_missing: "Target table <code>%table%</code> does not exist yet."
+    table_missing_help: "You can initialize it now from the <strong>mapped field names</strong> or switch to an existing table."
+    initialize_table: "Initialize table \"%table%\""
+    choose_existing: "Or choose an existing table:"
+    choose_existing_placeholder: "-- Choose existing table --"
+  preview:
+    eyebrow: "Preview"
+    title: "Resulting preview"
+
+result:
+  title: "Run status and result"
+  subtitle: "Review execution, spot row errors immediately, and download the generated artifact directly for JSON, XML, or SQL runs."
+  restart: "Import another file"
+  stats:
+    processed: "Processed"
+    imported: "Imported"
+    errors: "Errors"
+  validation:
+    eyebrow: "Validation"
+    title: "Error details"
+    row: "Row"
+    error: "Error"
+  export:
+    eyebrow: "Export"
+    title: "%format% artifact is ready"
+    description: "Download the generated %format% file to share the result or inspect it externally."
+    download: "Download %format%"
+  async:
+    eyebrow: "Background Job"
+    title: "Import started as background job"
+    description: "Job <code>%job_id%</code> was handed to Messenger. Status updates in this view happen automatically once a worker processes the task."
+    status: "Status"
+    status_endpoint: "Status endpoint"
+    payload_pending: "The API will also return result data or error messages once the job has finished."
+    consume_hint: "Start <code>php bin/console messenger:consume async_imports</code> in the demo app so the background import is processed."
+    payload_error: "Error"
+    payload_result: "Result"
+    payload_running: "Job accepted. Result data will appear after completion."
+    payload_failed_poll: "Status polling failed. The endpoint is still directly usable."
+
+flash:
+  invalid_csrf: "Invalid CSRF token."
+  db_table_creation_dispatched: "Database table creation was queued."
+  setup_dispatch_failed: "Failed to dispatch setup task: %reason%"
+  db_setup_dispatched: "Database setup task was queued. Table \"%table%\" will be created in the background."
+  import_queued: "Import queued. Use the job status endpoint to track progress."
+  artifact_saved: "%format% artifact saved to: %path%"
+  download_not_found: "Download file not found."
+
+api:
+  error:
+    no_file_uploaded: "Please upload a file."
+    unsupported_file_type: "Unsupported file type: %type%"
+    unsupported_adapter: "Unsupported adapter: %adapter%"
+    upload_failed: "File upload failed: %reason%"
+    invalid_mapping_json: "Mapping must be valid JSON."
+    job_not_found: "Import job not found."
+    file_too_large: "The file is too large. The public demo currently accepts up to %size% MB."
+    invalid_mime: "The uploaded file content does not match the selected %type% format."
+    rate_limited: "Too many requests. Please wait %seconds% seconds before trying again."
+
+import:
+  error:
+    invalid_json: "The JSON file is invalid. Please check syntax, commas, and quotation marks."
+    invalid_xml: "The XML file is invalid. Please check tags, attributes, and special characters."
+    cannot_read: "The source file could not be read. Please upload it again."
+    unsupported_file_type: "This file type is not supported in the demo."
+    generic: "The source file could not be processed. Please check the file format and contents."
+    invalid_csv: "The CSV file is invalid. Please check delimiters, quotation marks, and line breaks."
+    invalid_csv_column_count: "The CSV file is corrupted at line %line%: expected %expected% columns but found %actual%."
+    invalid_csv_unclosed_quote: "The CSV file is corrupted starting at line %line%: a quoted field was not closed correctly."

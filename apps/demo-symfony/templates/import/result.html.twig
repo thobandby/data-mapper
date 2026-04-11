@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Result{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Import Result</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Processed</h5>
+                    <p class="display-4">{{ result.processed }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Imported</h5>
+                    <p class="display-4">{{ result.imported }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card {{ result.errors is empty ? 'bg-light' : 'bg-danger text-white' }} text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Errors</h5>
+                    <p class="display-4">{{ result.errors|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if result.errors is not empty %}
+        <h2 class="mb-3 text-danger">Errors Details</h2>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead class="table-danger">
+                    <tr>
+                        <th style="width: 100px;">Row</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for error in result.errors %}
+                        <tr>
+                            <td class="text-center"><strong>{{ error.rowIndex }}</strong></td>
+                            <td>
+                                <ul class="list-unstyled mb-0">
+                                    {% for field, message in error.fieldErrors %}
+                                        <li><span class="badge bg-secondary">{{ field }}</span> {{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if adapter == 'json' %}
+        <div class="alert alert-info mt-4 d-flex align-items-center justify-content-between">
+            <span>Imported data is ready as JSON.</span>
+            <a href="{{ path('import_download') }}" class="btn btn-info btn-sm shadow-sm">
+                <i class="bi bi-download"></i> Download JSON
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="mt-5 border-top pt-3">
+        <a href="{{ path('import_index') }}" class="btn btn-primary">Import another file</a>
+    </div>
+{% endblock %}

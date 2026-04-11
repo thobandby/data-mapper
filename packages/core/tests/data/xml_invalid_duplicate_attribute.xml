@@ -1,0 +1,8 @@
+<dataset>
+  <record id="1" id="duplicate">
+    <name>Duplicate Attribute</name>
+    <email>dup@example.com</email>
+    <price>10.0</price>
+    <description>Ungültiges XML wegen doppeltem Attribut</description>
+  </record>
+</dataset>

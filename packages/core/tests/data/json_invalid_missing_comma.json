@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "Erika Musterfrau"
+    "email": "user1@test.local",
+    "price": 1.37,
+    "description": "Standard Datensatz"
+  },
+  {
+    "id": 2,
+    "name": "Hans Müller",
+    "email": "user2@demo.org",
+    "price": 2.74,
+    "description": "Text mit Umlaut äöü"
+  },
+  {
+    "id": 3,
+    "name": "Julia Schmidt",
+    "email": "user3@example.com",
+    "price": 4.11,
+    "description": "Normaler Inhalt ohne Probleme"
+  },
+  {
+    "id": 4,
+    "name": "Peter Pan",
+    "email": "user4@test.local",
+    "price": 5.48,
+    "description": "Kurzer Beschreibungstext"
+  },
+  {
+    "id": 5,
+    "name": "Anna Klein",
+    "email": "user5@demo.org",
+    "price": 6.85,
+    "description": "Eintrag für Testzwecke"
+  },
+  {
+    "id": 6,
+    "name": "Tom Test",
+    "email": "user6@example.com",
+    "price": 8.22,
+    "description": "Alles gut"
+  },
+  {
+    "id": 7,
+    "name": "Lisa Lang",
+    "email": "user7@test.local",
+    "price": 9.59,
+    "description": "Standard Datensatz"
+  },
+  {
+    "id": 8,
+    "name": "Karl Kurz",
+    "email": "user8@demo.org",
+    "price": 10.96,
+    "description": "Text mit Umlaut äöü"
+  },
+  {
+    "id": 9,
+    "name": "Sabine Groß",
+    "email": "user9@example.com",
+    "price": 12.33,
+    "description": "Normaler Inhalt ohne Probleme"
+  },
+  {
+    "id": 10,
+    "name": "Maja Becker",
+    "email": "user10@test.local",
+    "price": 13.7,
+    "description": "Kurzer Beschreibungstext"
+  },
+  {
+    "id": 11,
+    "name": "Jens Fischer",
+    "email": "user11@demo.org",
+    "price": 15.07,
+    "description": "Eintrag für Testzwecke"
+  },
+  {
+    "id": 12,
+    "name": "Kalle Braun",
+    "email": "user12@example.com",
+    "price": 16.44,
+    "description": "Alles gut"
+  },
+  {
+    "id": 13,
+    "name": "Biggi Sommer",
+    "email": "user13@test.local",
+    "price": 17.81,
+    "description": "Standard Datensatz"
+  },
+  {
+    "id": 14,
+    "name": "Niklas Berg",
+    "email": "user14@demo.org",
+    "price": 19.18,
+    "description": "Text mit Umlaut äöü"
+  },
+  {
+    "id": 15,
+    "name": "Max Mustermann",
+    "email": "user15@example.com",
+    "price": 20.55,
+    "description": "Normaler Inhalt ohne Probleme"
+  },
+  {
+    "id": 16,
+    "name": "Erika Musterfrau",
+    "email": "user16@test.local",
+    "price": 21.92,
+    "description": "Kurzer Beschreibungstext"
+  },
+  {
+    "id": 17,
+    "name": "Hans Müller",
+    "email": "user17@demo.org",
+    "price": 23.29,
+    "description": "Eintrag für Testzwecke"
+  },
+  {
+    "id": 18,
+    "name": "Julia Schmidt",
+    "email": "user18@example.com",
+    "price": 24.66,
+    "description": "Alles gut"
+  },
+  {
+    "id": 19,
+    "name": "Peter Pan",
+    "email": "user19@test.local",
+    "price": 26.03,
+    "description": "Standard Datensatz"
+  },
+  {
+    "id": 20,
+    "name": "Anna Klein",
+    "email": "user20@demo.org",
+    "price": 27.4,
+    "description": "Text mit Umlaut äöü"
+  }
+]

@@ -1,0 +1,306 @@
+openapi: 3.0.3
+info:
+  title: Dynamic Data Importer API
+  description: Standalone API for analyzing, previewing, and executing schema-aware imports.
+  version: 1.1.0
+servers:
+  - url: /
+    description: Current host and base path
+tags:
+  - name: Imports
+    description: Analyze uploaded files, preview mappings, and execute imports.
+paths:
+  /imports/analyze:
+    post:
+      tags: [Imports]
+      summary: Analyze an uploaded file
+      description: Detect the file structure and return headers plus a sample of rows. If a mapping is provided, the analyzed headers and sample are returned after applying that mapping.
+      operationId: analyzeImportFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+      responses:
+        '200':
+          description: File analyzed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /analyze:
+    post:
+      tags: [Imports]
+      summary: Analyze an uploaded file
+      description: Legacy alias for `/imports/analyze`. Returns the same JSON payload and supports the same multipart form fields.
+      operationId: analyzeImportFileLegacy
+      deprecated: true
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+      responses:
+        '200':
+          description: File analyzed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /imports/preview:
+    post:
+      tags: [Imports]
+      summary: Preview mapped output
+      description: Apply an optional mapping and preview the transformed headers and sample rows before import.
+      operationId: previewImportFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PreviewRequest'
+      responses:
+        '200':
+          description: Preview generated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /imports/execute:
+    post:
+      tags: [Imports]
+      summary: Execute an import
+      description: Execute the import using a selected output format and return the import summary plus generated output.
+      operationId: executeImportFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExecuteRequest'
+      responses:
+        '200':
+          description: Import executed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /import/sql:
+    post:
+      tags: [Imports]
+      summary: Execute an import and return SQL text
+      description: Legacy alias for `/imports/execute`. The request fields are identical to the execute endpoint, but the response body is returned as `text/plain`. This endpoint is intended for SQL generation workflows.
+      operationId: executeImportFileLegacySql
+      deprecated: true
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExecuteRequest'
+      responses:
+        '200':
+          description: SQL output generated successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  responses:
+    BadRequest:
+      description: Request validation or file processing failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    MappingJsonString:
+      type: string
+      description: JSON object mapping source headers to target headers.
+      example: '{"first_name":"given_name","last_name":"family_name"}'
+    UploadFile:
+      type: string
+      format: binary
+      description: CSV, XLS, XLSX, JSON, or XML file to process.
+    AnalyzeRequest:
+      type: object
+      required: [file]
+      properties:
+        file:
+          $ref: '#/components/schemas/UploadFile'
+        fileType:
+          type: string
+          description: Optional explicit file type override.
+          enum: [csv, xls, xlsx, json, xml]
+        delimiter:
+          type: string
+          description: Optional delimiter override for CSV files.
+          minLength: 1
+          maxLength: 1
+          example: ','
+        sampleSize:
+          type: integer
+          minimum: 0
+          default: 5
+        mapping:
+          $ref: '#/components/schemas/MappingJsonString'
+      description: Request payload for analyzing uploaded content. Mapping is optional and, when supplied, is applied during analysis.
+    PreviewRequest:
+      allOf:
+        - $ref: '#/components/schemas/AnalyzeRequest'
+    ExecuteRequest:
+      allOf:
+        - $ref: '#/components/schemas/AnalyzeRequest'
+        - type: object
+          properties:
+            outputFormat:
+              type: string
+              enum: [memory, json, xml, sql]
+              default: memory
+              example: xml
+            tableName:
+              type: string
+              default: imported_data
+              description: Used for SQL output generation.
+    DataRow:
+      type: object
+      additionalProperties: true
+    AnalyzeResponse:
+      type: object
+      required: [file_type, headers, sample]
+      example:
+        file_type: csv
+        delimiter: ","
+        headers: [name, age, email]
+        sample:
+          - { name: Alice, age: "30", email: alice@example.com }
+          - { name: Bob, age: "25", email: bob@example.com }
+      properties:
+        file_type:
+          type: string
+        delimiter:
+          type: string
+          nullable: true
+        headers:
+          type: array
+          items:
+            type: string
+        sample:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataRow'
+    PreviewResponse:
+      type: object
+      required: [file_type, original_headers, mapped_headers, mapping, sample]
+      example:
+        file_type: xml
+        delimiter: null
+        original_headers: [name, age, email]
+        mapped_headers: [full_name, years, contact_email]
+        mapping:
+          name: full_name
+          age: years
+          email: contact_email
+        sample:
+          - { full_name: Alice, years: "30", contact_email: alice@example.com }
+      properties:
+        file_type:
+          type: string
+        delimiter:
+          type: string
+          nullable: true
+        original_headers:
+          type: array
+          items:
+            type: string
+        mapped_headers:
+          type: array
+          items:
+            type: string
+        mapping:
+          type: object
+          additionalProperties:
+            type: string
+        sample:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataRow'
+    ImportError:
+      type: object
+      required: [row_index, field_errors]
+      properties:
+        row_index:
+          type: integer
+        field_errors:
+          type: object
+          additionalProperties:
+            type: string
+        message:
+          type: string
+          nullable: true
+    ImportSummary:
+      type: object
+      required: [processed, imported, errors]
+      properties:
+        processed:
+          type: integer
+        imported:
+          type: integer
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportError'
+    ExecuteOutput:
+      type: object
+      properties:
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataRow'
+        sql:
+          type: string
+    ExecuteResponse:
+      type: object
+      required: [file_type, output_format, result, output]
+      example:
+        file_type: xml
+        output_format: xml
+        result:
+          processed: 2
+          imported: 2
+          errors: []
+        output:
+          rows:
+            - { full_name: Alice, years: "30" }
+            - { full_name: Bob, years: "25" }
+      properties:
+        file_type:
+          type: string
+        delimiter:
+          type: string
+          nullable: true
+        output_format:
+          type: string
+          enum: [memory, json, sql]
+        result:
+          $ref: '#/components/schemas/ImportSummary'
+        output:
+          $ref: '#/components/schemas/ExecuteOutput'
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

@@ -1,0 +1,121 @@
+<dataset>
+  <record id="1">
+    <name>Erika Musterfrau</name>
+    <email>user1@test.local</email>
+    <price>1.37</price>
+    <description>Standard Datensatz
+  </record>
+  <record id="2">
+    <name>Hans Müller</name>
+    <email>user2@demo.org</email>
+    <price>2.74</price>
+    <description>Text mit Umlaut äöü</description>
+  </record>
+  <record id="3">
+    <name>Julia Schmidt</name>
+    <email>user3@example.com</email>
+    <price>4.11</price>
+    <description>Normaler Inhalt ohne Probleme</description>
+  </record>
+  <record id="4">
+    <name>Peter Pan</name>
+    <email>user4@test.local</email>
+    <price>5.48</price>
+    <description>Kurzer Beschreibungstext</description>
+  </record>
+  <record id="5">
+    <name>Anna Klein</name>
+    <email>user5@demo.org</email>
+    <price>6.85</price>
+    <description>Eintrag für Testzwecke</description>
+  </record>
+  <record id="6">
+    <name>Tom Test</name>
+    <email>user6@example.com</email>
+    <price>8.22</price>
+    <description>Alles gut</description>
+  </record>
+  <record id="7">
+    <name>Lisa Lang</name>
+    <email>user7@test.local</email>
+    <price>9.59</price>
+    <description>Standard Datensatz</description>
+  </record>
+  <record id="8">
+    <name>Karl Kurz</name>
+    <email>user8@demo.org</email>
+    <price>10.96</price>
+    <description>Text mit Umlaut äöü</description>
+  </record>
+  <record id="9">
+    <name>Sabine Groß</name>
+    <email>user9@example.com</email>
+    <price>12.33</price>
+    <description>Normaler Inhalt ohne Probleme</description>
+  </record>
+  <record id="10">
+    <name>Maja Becker</name>
+    <email>user10@test.local</email>
+    <price>13.7</price>
+    <description>Kurzer Beschreibungstext</description>
+  </record>
+  <record id="11">
+    <name>Jens Fischer</name>
+    <email>user11@demo.org</email>
+    <price>15.07</price>
+    <description>Eintrag für Testzwecke</description>
+  </record>
+  <record id="12">
+    <name>Kalle Braun</name>
+    <email>user12@example.com</email>
+    <price>16.44</price>
+    <description>Alles gut</description>
+  </record>
+  <record id="13">
+    <name>Biggi Sommer</name>
+    <email>user13@test.local</email>
+    <price>17.81</price>
+    <description>Standard Datensatz</description>
+  </record>
+  <record id="14">
+    <name>Niklas Berg</name>
+    <email>user14@demo.org</email>
+    <price>19.18</price>
+    <description>Text mit Umlaut äöü</description>
+  </record>
+  <record id="15">
+    <name>Max Mustermann</name>
+    <email>user15@example.com</email>
+    <price>20.55</price>
+    <description>Normaler Inhalt ohne Probleme</description>
+  </record>
+  <record id="16">
+    <name>Erika Musterfrau</name>
+    <email>user16@test.local</email>
+    <price>21.92</price>
+    <description>Kurzer Beschreibungstext</description>
+  </record>
+  <record id="17">
+    <name>Hans Müller</name>
+    <email>user17@demo.org</email>
+    <price>23.29</price>
+    <description>Eintrag für Testzwecke</description>
+  </record>
+  <record id="18">
+    <name>Julia Schmidt</name>
+    <email>user18@example.com</email>
+    <price>24.66</price>
+    <description>Alles gut</description>
+  </record>
+  <record id="19">
+    <name>Peter Pan</name>
+    <email>user19@test.local</email>
+    <price>26.03</price>
+    <description>Standard Datensatz</description>
+  </record>
+  <record id="20">
+    <name>Anna Klein</name>
+    <email>user20@demo.org</email>
+    <price>27.4</price>
+    <description>Text mit Umlaut äöü</description>
+  </record>

@@ -1,0 +1,15 @@
+{
+  "target": {
+    "type": "doctrine_entity",
+    "class": "App\\Entity\\Product"
+  },
+  "options": {
+    "has_header": true,
+    "delimiter": ";"
+  },
+  "columns": [
+    {"csv": "sku", "field": "sku", "type": "string", "required": true, "transforms": ["trim"]},
+    {"csv": "name", "field": "name", "type": "string", "required": true, "transforms": ["trim"]},
+    {"csv": "price", "field": "price", "type": "float", "required": false}
+  ]
+}

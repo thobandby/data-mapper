@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use DynamicDataImporter\Infrastructure\Api\ApiServerCommandFactory;
+
+$apiIndex = __DIR__ . '/../packages/core/bin/api/index.php';
+$factory = new ApiServerCommandFactory();
+
+try {
+    $port = $factory->resolvePort($argv[1] ?? null);
+} catch (\InvalidArgumentException $exception) {
+    fwrite(\STDERR, $exception->getMessage() . PHP_EOL);
+
+    exit(1);
+}
+
+$address = "0.0.0.0:$port";
+
+echo "Starting Dynamic Data Importer API on http://$address\n";
+echo "Open your browser at http://localhost:$port for Swagger UI\n";
+echo "Press Ctrl+C to stop\n";
+
+$process = proc_open(
+    $factory->createCommand($port, $apiIndex),
+    [
+        0 => \STDIN,
+        1 => \STDOUT,
+        2 => \STDERR,
+    ],
+    $pipes,
+);
+
+if (! is_resource($process)) {
+    fwrite(\STDERR, "Failed to start PHP built-in server." . PHP_EOL);
+
+    exit(1);
+}
+
+exit(proc_close($process));

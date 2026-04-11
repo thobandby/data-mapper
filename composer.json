@@ -1,0 +1,119 @@
+{
+  "name": "thorsten/dynamic-data-importer-monorepo",
+  "description": "Monorepo for a platform-agnostic data import pipeline (CSV now, spreadsheets later).",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "phpoffice/phpspreadsheet": "^5.5",
+    "doctrine/orm": "^3.0",
+    "symfony/validator": "^7.4",
+    "symfony/http-kernel": "^7.4",
+    "symfony/dependency-injection": "^7.4",
+    "symfony/framework-bundle": "^7.4",
+    "symfony/messenger": "^7.4",
+    "symfony/rate-limiter": "^7.4",
+    "symfony/translation": "^7.4",
+    "symfony/twig-bundle": "^7.4",
+    "symfony/yaml": "^7.4",
+    "symfony/asset": "^7.4",
+    "symfony/form": "^7.4",
+    "symfony/security-csrf": "^7.4",
+    "symfony/mime": "^7.4",
+    "symfony/doctrine-bridge": "^7.4",
+    "doctrine/doctrine-bundle": "^3.0",
+    "symfony/var-exporter": "^7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5",
+    "phpstan/phpstan": "^1.12",
+    "symfony/web-profiler-bundle": "^8.0",
+    "symfony/debug-bundle": "^8.0",
+    "symfony/monolog-bundle": "^4.0",
+    "friendsofphp/php-cs-fixer": "^3.66",
+    "nunomaduro/phpinsights": "^2.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "DynamicDataImporter\\": "packages/core/src/",
+      "DynamicDataImporter\\Doctrine\\": "packages/doctrine-adapter/src/",
+      "DynamicDataImporter\\Cli\\": "packages/cli-adapter/src/",
+      "DynamicDataImporter\\Symfony\\": "packages/symfony-adapter/src/",
+      "App\\": "apps/demo-symfony/src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DynamicDataImporter\\Tests\\": "packages/core/tests/",
+      "DynamicDataImporter\\Cli\\Tests\\": "packages/cli-adapter/tests/",
+      "DynamicDataImporter\\Doctrine\\Tests\\": "packages/doctrine-adapter/tests/",
+      "DynamicDataImporter\\Tests\\Doctrine\\": "packages/doctrine-adapter/tests/",
+      "DynamicDataImporter\\Tests\\Symfony\\": "packages/symfony-adapter/tests/",
+      "App\\Tests\\": "apps/demo-symfony/tests/"
+    }
+  },
+  "scripts": {
+    "phpunit": "phpunit",
+    "test:fuzz": "phpunit --group fuzz",
+    "phpstan": "phpstan analyse -c phpstan.neon --debug",
+    "cs:fix:core": "php-cs-fixer fix --config=packages/core/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:cli-adapter": "php-cs-fixer fix --config=packages/cli-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:doctrine-adapter": "php-cs-fixer fix --config=packages/doctrine-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:symfony-adapter": "php-cs-fixer fix --config=packages/symfony-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:demo-symfony": "php-cs-fixer fix --config=apps/demo-symfony/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:demo-cli": "php-cs-fixer fix --config=apps/demo-cli/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix": [
+      "@cs:fix:core",
+      "@cs:fix:cli-adapter",
+      "@cs:fix:doctrine-adapter",
+      "@cs:fix:symfony-adapter",
+      "@cs:fix:demo-symfony",
+      "@cs:fix:demo-cli"
+    ],
+    "cs-fix": "@cs:fix",
+    "cs:check:core": "php-cs-fixer fix --dry-run --diff --config=packages/core/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:cli-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/cli-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:doctrine-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/doctrine-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:symfony-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/symfony-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:demo-symfony": "php-cs-fixer fix --dry-run --diff --config=apps/demo-symfony/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:demo-cli": "php-cs-fixer fix --dry-run --diff --config=apps/demo-cli/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check": [
+      "@cs:check:core",
+      "@cs:check:cli-adapter",
+      "@cs:check:doctrine-adapter",
+      "@cs:check:symfony-adapter",
+      "@cs:check:demo-symfony",
+      "@cs:check:demo-cli"
+    ],
+    "insights:core": "phpinsights analyse --disable-security-check --config-path=packages/core/phpinsights.php --no-interaction packages/core",
+    "insights:cli-adapter": "phpinsights analyse --disable-security-check --config-path=packages/cli-adapter/phpinsights.php --no-interaction packages/cli-adapter",
+    "insights:doctrine-adapter": "phpinsights analyse --disable-security-check --config-path=packages/doctrine-adapter/phpinsights.php --no-interaction packages/doctrine-adapter",
+    "insights:symfony-adapter": "phpinsights analyse --disable-security-check --config-path=packages/symfony-adapter/phpinsights.php --no-interaction packages/symfony-adapter",
+    "insights:demo-symfony": "phpinsights analyse --disable-security-check --config-path=apps/demo-symfony/phpinsights.php --no-interaction apps/demo-symfony",
+    "insights:demo-cli": "phpinsights analyse --disable-security-check --config-path=apps/demo-cli/phpinsights.php --no-interaction apps/demo-cli",
+    "insights": [
+      "@insights:core",
+      "@insights:cli-adapter",
+      "@insights:doctrine-adapter",
+      "@insights:symfony-adapter",
+      "@insights:demo-symfony",
+      "@insights:demo-cli"
+    ],
+    "sonar": "./bin/sonar.sh",
+    "test": [
+      "@phpunit",
+      "@phpstan",
+      "@cs:check",
+      "@insights"
+    ],
+    "qa": "@test",
+    "lint": "php -l $(rg --files -g '*.php' -g '!node_modules/**' -g '!vendor/**' -g '!.git/**' | tr '\n' ' ')"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

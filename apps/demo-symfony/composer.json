@@ -1,0 +1,65 @@
+{
+  "name": "thorsten/dynamic-data-importer-demo-symfony",
+  "type": "project",
+  "version": "0.9.0",
+  "description": "Demo Symfony application for the dynamic data importer.",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "thorsten/dynamic-data-importer-core": "^0.9",
+    "thorsten/dynamic-data-importer-symfony-adapter": "^0.9",
+    "symfony/framework-bundle": "^7.4",
+    "symfony/rate-limiter": "^7.4",
+    "symfony/translation": "^7.4",
+    "symfony/twig-bundle": "^7.4",
+    "symfony/routing": "^7.4",
+    "symfony/yaml": "^7.4",
+    "symfony/config": "^7.4",
+    "symfony/dependency-injection": "^7.4",
+    "symfony/validator": "^7.4",
+    "symfony/security-csrf": "^7.4",
+    "doctrine/dbal": "^4.4",
+    "symfony/mime": "^8.0",
+    "doctrine/doctrine-bundle": "^3.2",
+    "doctrine/orm": "^3.6",
+    "symfony/monolog-bundle": "^4.0",
+    "thorsten/dynamic-data-importer-doctrine-adapter": "^0.9",
+    "phpoffice/phpspreadsheet": "^5.5"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../packages/core",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../packages/symfony-adapter",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../packages/doctrine-adapter",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require-dev": {
+    "php-cs-fixer/shim": "^3.94",
+    "phpstan/phpstan": "^2.1",
+    "symfony/phpunit-bridge": "^8.0",
+    "phpunit/phpunit": "^13.1"
+  }
+}

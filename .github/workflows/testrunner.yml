@@ -1,0 +1,91 @@
+name: TestRunner
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: testrunner-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: xdebug
+          tools: composer
+          extensions: dom, mbstring, xml, xmlreader, xmlwriter, simplexml, sqlite3, pdo_sqlite, curl, intl, zip
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run unit tests
+        run: vendor/bin/phpunit
+
+      - name: Run fuzz tests
+        run: composer test:fuzz
+
+      - name: Run PHP CS Fixer
+        run: composer cs:check
+
+      - name: Generate PHPUnit and coverage reports
+        run: |
+          XDEBUG_MODE=coverage vendor/bin/phpunit \
+            --coverage-filter packages/core/src \
+            --coverage-filter packages/cli-adapter/src \
+            --coverage-filter packages/doctrine-adapter/src \
+            --coverage-filter packages/symfony-adapter/src \
+            --coverage-filter apps/demo-symfony/src \
+            --coverage-clover coverage.xml \
+            --log-junit phpunit-report.xml
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+          extensions: dom, mbstring, xml, xmlreader, xmlwriter, simplexml, sqlite3, pdo_sqlite, curl, intl, zip
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e

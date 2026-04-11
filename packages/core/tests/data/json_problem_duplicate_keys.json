@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "name": "Erster Name",
+    "name": "Zweiter Name",
+    "email": "dup@example.com",
+    "price": 19.99,
+    "description": "Doppelter Schlüssel"
+  }
+]

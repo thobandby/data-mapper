@@ -1,0 +1,8 @@
+parameters:
+  level: 7
+  paths:
+    - apps/demo-symfony/src
+    - packages/core/src
+    - packages/doctrine-adapter/src
+    - packages/cli-adapter/src
+    - packages/symfony-adapter/src

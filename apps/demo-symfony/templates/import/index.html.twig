@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Data{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Upload File for Import</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token('import') }}">
+
+        <div class="mb-3">
+            <label for="file" class="form-label">Select file:</label>
+            <input type="file" id="file" name="file" class="form-control" required>
+            <div class="form-text">Supported formats: CSV, Excel (.xlsx, .xls), JSON, XML</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="file_type" class="form-label">File Type:</label>
+            <select name="file_type" id="file_type" class="form-select">
+                <option value="auto">Auto-detect (by extension)</option>
+                <option value="csv">CSV</option>
+                <option value="xlsx">Excel (XLSX)</option>
+                <option value="xls">Excel (XLS)</option>
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="adapter" class="form-label">Persistence Adapter:</label>
+            <select name="adapter" id="adapter" class="form-select">
+                <option value="memory">In-Memory (for testing)</option>
+                <option value="symfony">Symfony Service (via DI)</option>
+                <option value="json">JSON File (temp dir)</option>
+            </select>
+            <div class="form-text">Choose how you want to save the imported data.</div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Upload and Map</button>
+        </div>
+    </form>
+{% endblock %}

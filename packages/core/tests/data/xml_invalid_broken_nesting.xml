@@ -1,0 +1,8 @@
+<dataset>
+  <record id="1">
+    <name>Broken Nesting</name>
+    <email>broken@example.com</email>
+    <price>10.0</price>
+    <description><b>Fett</description></b>
+  </record>
+</dataset>

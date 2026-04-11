@@ -1,0 +1,15 @@
+{
+  "name": "thorsten/dynamic-data-importer-core",
+  "description": "Platform-agnostic core for schema-aware data imports.",
+  "type": "library",
+  "version": "0.9.0",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "DynamicDataImporter\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "target": {"type": "doctrine_entity", "class": "App\\Entity\\User"},
+  "options": {"has_header": true},
+  "columns": [
+    {"csv": "email", "field": "email", "type": "string", "required": true, "transforms": ["trim", "lowercase"]},
+    {"csv": "birthdate", "field": "birthDate", "type": "date", "required": false, "transforms": ["date_normalize"]},
+    {"csv": "active", "field": "active", "type": "bool", "required": false}
+  ]
+}

@@ -1,0 +1,67 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        App\Import\Execution\ImportTargetBuilderInterface:
+            tags: ['app.import_target_builder']
+
+    App\EventSubscriber\LocaleSubscriber:
+        arguments:
+            $defaultLocale: 'de'
+            $supportedLocales: ['de', 'en']
+
+    App\Messenger\FileQueueTransportFactory:
+        tags:
+            - { name: messenger.transport_factory }
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+
+    App\Import\Execution\ImportTargetFactory:
+        arguments:
+            $builders: !tagged_iterator app.import_target_builder
+
+    App\Import\Status\ImportJobClockInterface:
+        alias: App\Import\Status\UtcImportJobClock
+
+    App\Service\ImportArtifactStorage:
+        arguments:
+            $artifactDirectory: '%kernel.project_dir%/var/import-artifacts'
+
+    Symfony\Component\RateLimiter\Storage\CacheStorage:
+        arguments:
+            $pool: '@cache.app'
+
+    app.rate_limiter.api_import_start:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            $config:
+                id: 'api_import_start'
+                policy: 'fixed_window'
+                limit: 5
+                interval: '60 seconds'
+            $storage: '@Symfony\Component\RateLimiter\Storage\CacheStorage'
+
+    app.rate_limiter.api_import_status:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            $config:
+                id: 'api_import_status'
+                policy: 'fixed_window'
+                limit: 60
+                interval: '60 seconds'
+            $storage: '@Symfony\Component\RateLimiter\Storage\CacheStorage'
+
+    app.rate_limiter.web_upload:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            $config:
+                id: 'web_upload'
+                policy: 'fixed_window'
+                limit: 12
+                interval: '300 seconds'
+            $storage: '@Symfony\Component\RateLimiter\Storage\CacheStorage'

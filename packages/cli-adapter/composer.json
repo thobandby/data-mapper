@@ -1,0 +1,20 @@
+{
+  "name": "thorsten/dynamic-data-importer-cli-adapter",
+  "description": "CLI adapter for dynamic-data-importer.",
+  "type": "library",
+  "version": "0.9.0",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "thorsten/dynamic-data-importer-core": "^0.9",
+    "symfony/console": "^7.4"
+  },
+  "bin": [
+    "bin/import"
+  ],
+  "autoload": {
+    "psr-4": {
+      "DynamicDataImporter\\Cli\\": "src/"
+    }
+  }
+}

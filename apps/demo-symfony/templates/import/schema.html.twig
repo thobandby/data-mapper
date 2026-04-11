@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Schema Setup{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Select Target Schema</h1>
+    <p class="text-muted">Current file: <strong>{{ file }}</strong> | Adapter: <strong>{{ adapter }}</strong></p>
+
+    <form method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token('import_schema') }}">
+        <input type="hidden" name="file" value="{{ file }}">
+        <input type="hidden" name="file_type" value="{{ file_type }}">
+        <input type="hidden" name="adapter" value="{{ adapter }}">
+
+        {% if adapter == 'symfony' %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Database Table Selection</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="existing_table" class="form-label">Choose an existing table:</label>
+                        <select name="table" id="existing_table" class="form-select">
+                            <option value="">-- Create new table --</option>
+                            {% for table in existing_tables %}
+                                <option value="{{ table }}" {% if table == table_name %}selected{% endif %}>{{ table }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="new_table_setup" style="display: {% if table_name and table_name in existing_tables %}none{% else %}block{% endif %};">
+                        <div class="mb-4">
+                            <label for="table_name" class="form-label fw-bold">New Table Name:</label>
+                            <input type="text" id="table_name" name="new_table_name" class="form-control form-control-lg" value="{{ table_name }}" placeholder="imported_rows" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                            <div class="form-text">Enter the name for the new table to be created.</div>
+                        </div>
+
+                        <h6 class="fw-bold mb-3">Define Table Columns</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered" id="columns_table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Column Name</th>
+                                        <th>Include</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for header in headers %}
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="columns[{{ loop.index0 }}]" class="form-control form-control-sm" value="{{ header }}" placeholder="column_name" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check form-check-inline m-0">
+                                                    <input class="form-check-input" type="checkbox" name="selected_columns[]" value="{{ loop.index0 }}" checked {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="add_column_btn" class="btn btn-outline-secondary btn-sm mb-4" onclick="addRow()" {% if table_name and table_name in existing_tables %}disabled{% endif %}>
+                            <i class="bi bi-plus-circle"></i> Add Custom Field
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+        {% if sample is not empty %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Sample Data Preview (Top 5)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    {% for header in headers %}
+                                        <th class="small">{{ header }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for row in sample %}
+                                        <tr>
+                                            {% for header in headers %}
+                                                {% set value = row[header] ?? '' %}
+                                                <td class="small text-truncate" style="max-width: 150px;">{{ value }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Continue to Mapping</button>
+            <a href="{{ path('import_index') }}" class="btn btn-link">Back to Upload</a>
+        </div>
+    </form>
+
+    <script>
+        const existingTableSelect = document.getElementById('existing_table');
+        if (existingTableSelect) {
+            existingTableSelect.addEventListener('change', function() {
+                const newTableSetup = document.getElementById('new_table_setup');
+                const isExistingTable = this.value !== "";
+
+                newTableSetup.style.display = isExistingTable ? 'none' : 'block';
+
+                // Enable/disable inputs so they are only submitted when creating a new table
+                document.getElementById('table_name').disabled = isExistingTable;
+                document.getElementById('add_column_btn').disabled = isExistingTable;
+                document.querySelectorAll('#columns_table input, #columns_table button').forEach(el => {
+                    el.disabled = isExistingTable;
+                });
+            });
+        }
+
+        let rowIndex = {{ headers|length }};
+        function addRow() {
+            const tbody = document.querySelector('#columns_table tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <input type="text" name="columns[${rowIndex}]" class="form-control form-control-sm" placeholder="column_name">
+                </td>
+                <td class="text-center">
+                    <div class="form-check form-check-inline m-0">
+                        <input class="form-check-input" type="checkbox" name="selected_columns[]" value="${rowIndex}" checked>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            rowIndex++;
+        }
+    </script>
+{% endblock %}
