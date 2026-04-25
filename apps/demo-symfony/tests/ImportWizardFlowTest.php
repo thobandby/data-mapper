@@ -233,7 +233,7 @@ final class ImportWizardFlowTest extends TestCase
             'file' => (string) ($schemaQuery['file'] ?? ''),
             'file_type' => 'csv',
             'adapter' => 'sql',
-            'table' => 'imported_rows',
+            'table' => 'custom_export_rows',
         ], [], [
             'HTTP_TURBO_FRAME' => 'import_step',
         ]);
@@ -258,6 +258,7 @@ final class ImportWizardFlowTest extends TestCase
         self::assertSame(Response::HTTP_OK, $processResponse->getStatusCode());
         self::assertStringContainsString('SQL-Artefakt steht bereit', $resultHtml);
         self::assertStringContainsString('href="/import/download"', $resultHtml);
+        self::assertStringContainsString('<code>custom_export_rows</code>', $resultHtml);
         self::assertStringContainsString('data-turbo-frame="_top"', $resultHtml);
         self::assertStringContainsString('target="_top"', $resultHtml);
     }

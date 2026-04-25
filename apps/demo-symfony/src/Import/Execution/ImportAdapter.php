@@ -7,6 +7,7 @@ namespace App\Import\Execution;
 enum ImportAdapter: string
 {
     case Memory = 'memory';
+    case Pdo = 'pdo';
     case Json = 'json';
     case Xml = 'xml';
     case Sql = 'sql';

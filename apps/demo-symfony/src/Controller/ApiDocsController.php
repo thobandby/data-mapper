@@ -204,7 +204,7 @@ final class ApiDocsController extends AbstractController
         return implode(' ', [
             'Public demo API for queued imports. Rate-limited and intended for evaluation, not bulk ingestion.',
             'Supported file types are CSV, XLS, XLSX, JSON, and XML.',
-            'Available adapters are symfony for database persistence via the demo app.',
+            'Available adapters are symfony for Doctrine-based persistence via the demo app and pdo for direct PDO-based inserts.',
             'Use memory for an in-memory dry run without persisted artifacts.',
             'Use json for JSON export output, xml for XML export output, and sql for SQL script export output.',
             'The delimiter option is only relevant for CSV imports.',
@@ -216,7 +216,7 @@ final class ApiDocsController extends AbstractController
     {
         return implode(' ', [
             'Upload one CSV, XLS, XLSX, JSON, or XML file and queue an asynchronous import job.',
-            'Supported adapters are symfony, memory, json, xml, and sql.',
+            'Supported adapters are symfony, pdo, memory, json, xml, and sql.',
             'The delimiter parameter is only used for CSV files.',
             'It overrides automatic delimiter detection, for example when a file uses semicolons instead of commas.',
             'The public demo is rate-limited and currently accepts files up to 10 MB.',
@@ -227,7 +227,8 @@ final class ApiDocsController extends AbstractController
     {
         return implode(' ', [
             'Target adapter.',
-            'Use symfony to persist into the demo database, memory for a dry run without persisted output.',
+            'Use symfony to persist into the demo database via Doctrine.',
+            'Use pdo for direct inserts through PDO, or memory for a dry run without persisted output.',
             'Use json for JSON export, xml for XML export, or sql for an SQL script export.',
         ]);
     }

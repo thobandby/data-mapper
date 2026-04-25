@@ -37,7 +37,7 @@ final class ImportPreviewService
             'headers' => $reader->headers(),
             'sample' => $this->spreadsheetFormulaSanitizer->sanitizeSample($result['sample']),
             'delimiter' => $delimiter,
-            'existing_tables' => $adapter === 'symfony' ? $this->schemaManager->listTables() : [],
+            'existing_tables' => $this->existingTablesFor($adapter),
         ];
     }
 
@@ -89,7 +89,7 @@ final class ImportPreviewService
             'file' => basename($filePath),
             'delimiter' => $delimiter,
             'is_mapping_applied' => $mapping !== [],
-            'db_initialized' => $adapter !== 'symfony' || $this->schemaManager->tableExists($tableName),
+            'db_initialized' => ! $this->usesDatabaseSchema($adapter) || $this->schemaManager->tableExists($tableName),
             'target_columns' => $targetColumns,
             'existing_tables' => $this->existingTablesFor($adapter),
         ];
@@ -102,7 +102,7 @@ final class ImportPreviewService
      */
     private function resolveTargetColumns(string $adapter, string $tableName, array $targetColumns): array
     {
-        if ($adapter !== 'symfony' || $targetColumns !== [] || ! $this->schemaManager->tableExists($tableName)) {
+        if (! $this->usesDatabaseSchema($adapter) || $targetColumns !== [] || ! $this->schemaManager->tableExists($tableName)) {
             return $targetColumns;
         }
 
@@ -114,6 +114,11 @@ final class ImportPreviewService
      */
     private function existingTablesFor(string $adapter): array
     {
-        return $adapter === 'symfony' ? $this->schemaManager->listTables() : [];
+        return $this->usesDatabaseSchema($adapter) ? $this->schemaManager->listTables() : [];
+    }
+
+    private function usesDatabaseSchema(string $adapter): bool
+    {
+        return in_array($adapter, ['symfony', 'pdo'], true);
     }
 }

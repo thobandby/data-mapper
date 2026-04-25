@@ -77,7 +77,42 @@ final class SchemaSelectionServiceTest extends TestCase
         ], $selection);
     }
 
-    public function testResolveSelectionSkipsDispatchForNonSymfonyAdapter(): void
+    public function testResolveSelectionDispatchesSetupForNewPdoTable(): void
+    {
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects(self::once())
+            ->method('dispatch')
+            ->with(self::callback(static function (object $message): bool {
+                return $message instanceof SetupDatabaseMessage
+                    && $message->tableName === 'imported_rows'
+                    && $message->columns === ['email'];
+            }))
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
+
+        $service = new SchemaSelectionService($messageBus);
+
+        $selection = $service->resolveSelection(
+            '',
+            'imported_rows',
+            ['name', 'email'],
+            ['name', 'email'],
+            [1],
+            'pdo',
+        );
+
+        self::assertSame([
+            'table' => 'imported_rows',
+            'target_columns' => ['email'],
+            'mapping' => [
+                'name' => '',
+                'email' => 'email',
+            ],
+            'db_setup_dispatched' => true,
+            'db_setup_error' => null,
+        ], $selection);
+    }
+
+    public function testResolveSelectionSkipsDispatchForNonDatabaseAdapter(): void
     {
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects(self::never())->method('dispatch');

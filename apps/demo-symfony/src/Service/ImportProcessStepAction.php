@@ -63,6 +63,7 @@ final readonly class ImportProcessStepAction
             'adapter' => $context->adapter,
             'async_job' => $job,
             'async_status_url' => $generateUrl('api_import_status', ['jobId' => $job['id']]),
+            ...$this->resultContext($context),
         ]);
     }
 
@@ -88,7 +89,33 @@ final readonly class ImportProcessStepAction
         return $this->responder->renderStep($request, 'result', [
             'result' => $execution['result'],
             'adapter' => $context->adapter,
+            ...$this->resultContext($context),
         ]);
+    }
+
+    /**
+     * @return array{
+     *     file: string,
+     *     file_type: string,
+     *     table_name: string,
+     *     delimiter: ?string,
+     *     mapping: array<string, string>,
+     *     target_columns: list<string>
+     * }
+     */
+    private function resultContext(ImportContext $context): array
+    {
+        return [
+            'file' => $context->file,
+            'file_type' => $context->fileType,
+            'table_name' => $context->tableName,
+            'delimiter' => $context->delimiter,
+            'mapping' => $context->mapping,
+            'target_columns' => array_values(array_filter(
+                $context->targetColumns,
+                static fn (string $column): bool => $column !== '',
+            )),
+        ];
     }
 
     /**

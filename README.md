@@ -114,6 +114,21 @@ Then:
 3. Upload a sample file such as `apps/demo-symfony/data/sample.csv` or `apps/demo-symfony/data/sample.xml`
 4. Walk through schema review, mapping, and execution
 
+### Public Edge Proxy
+
+For the public demo domain `https://dde.baumann-it-dienstleistungen.de`:
+
+- the `web` container is exposed on the shared Docker network `external` as `dde-demo-web`
+- the Symfony front controller accepts forwarded headers from the reverse proxy via `TRUSTED_PROXIES`
+- the demo only trusts `dde.baumann-it-dienstleistungen.de`, `localhost`, and `127.0.0.1` as valid hosts
+
+If you deploy this publicly, set a strong secret before startup:
+
+```bash
+export DDE_APP_SECRET='replace-with-a-long-random-secret'
+docker compose up -d
+```
+
 Public-demo protections currently enabled:
 - CSRF protection for browser actions
 - File-size cap of 10 MB

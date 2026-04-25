@@ -31,6 +31,7 @@ meta:
 adapter:
   memory: "Testlauf"
   symfony: "Datenbankimport via Doctrine"
+  pdo: "Datenbankimport via PDO"
   json: "JSON-Export"
   xml: "XML-Export"
   sql: "SQL-Export (inkl. Schema)"
@@ -38,11 +39,11 @@ adapter:
 wizard:
   header:
     title: "Dateiimport als technischer Workflow"
-    description: "Die Demo führt durch Upload, Schema-Prüfung, Feld-Mapping und Ausführung. Sie bildet In-Memory-Läufe, JSON-, XML- und SQL-Export, Symfony-Persistierung und asynchrone API-Imports aus einer Oberfläche heraus ab."
+    description: "Die Demo führt durch Upload, Schema-Prüfung, Feld-Mapping und Ausführung. Sie bildet In-Memory-Läufe, JSON-, XML- und SQL-Export, Persistierung via Doctrine oder PDO sowie asynchrone API-Imports aus einer Oberfläche heraus ab."
 
 upload:
   title: "Quelldatei und Zielmodus wählen"
-  subtitle: "Lade CSV, Excel, JSON oder XML hoch und entscheide, ob du erst nur validieren, ein JSON-, XML- oder SQL-Artefakt erzeugen oder in Symfony persistieren willst."
+  subtitle: "Lade CSV, Excel, JSON oder XML hoch und entscheide, ob du erst nur validieren, ein JSON-, XML- oder SQL-Artefakt erzeugen oder via Doctrine beziehungsweise PDO persistieren willst."
   error:
     no_file_uploaded: "Bitte wähle eine Datei für den Import aus."
     unsupported_file_type: "Nicht unterstützter Dateityp: %type%"
@@ -75,7 +76,7 @@ upload:
     schema_title: "Schema- und Tabellensteuerung"
     schema_text: "Für Symfony können bestehende Tabellen gewählt oder neue Tabellenfelder vorbereitet und initialisiert werden."
     modes_title: "Ausführungsmodi"
-    modes_text: "In-Memory für schnelle Prüfungen, JSON-, XML- oder SQL-Artefakte sowie Symfony für persistierte oder asynchrone Imports."
+    modes_text: "In-Memory für schnelle Prüfungen, JSON-, XML- oder SQL-Artefakte sowie Doctrine- oder PDO-basierte Datenbankimporte."
     api_title: "API und Job-Status"
     api_text: "Die Demo enthält OpenAPI-Docs sowie Status-Endpunkte für Messenger-basierte Hintergrundjobs."
 
@@ -87,11 +88,13 @@ schema:
   storage:
     eyebrow: "Storage Target"
     title: "Zieltabelle festlegen"
+    sql_title: "Tabellenname für SQL-Export"
     existing_table: "Bestehende Tabelle wählen"
     new_table_option: "-- Neue Tabelle konfigurieren --"
     new_table_name: "Name der neuen Tabelle"
     new_table_placeholder: "imported_rows"
     new_table_help: "Die Tabelle wird im nächsten Schritt anhand der gewählten Feldnamen initialisiert."
+    sql_table_help: "Dieser Tabellenname wird für das generierte CREATE- und INSERT-SQL verwendet."
     suggested_columns: "Vorgeschlagene Tabellenfelder"
     add_column: "Feld ergänzen"
     column_name: "Feldname"
@@ -151,6 +154,19 @@ result:
     title: "%format%-Artefakt steht bereit"
     description: "Lade die erzeugte %format%-Datei herunter, um das Ergebnis weiterzugeben oder extern zu prüfen."
     download: "%format% herunterladen"
+  selection:
+    eyebrow: "Auswahl"
+    title: "Verwendete Parameter"
+    file: "Datei"
+    file_type: "Dateityp"
+    adapter: "Adapter"
+    table: "Tabelle"
+    delimiter: "Delimiter"
+    target_columns: "Zielspalten"
+    mapping: "Mapping"
+    not_configured: "nicht gesetzt"
+    no_target_columns: "Keine Zielspalten explizit ausgewählt."
+    no_mapping: "Kein explizites Mapping gesetzt."
   async:
     eyebrow: "Background Job"
     title: "Import als Hintergrundjob gestartet"

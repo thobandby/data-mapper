@@ -99,7 +99,7 @@ final class SchemaSelectionService
      */
     private function dispatchSetupMessage(string $adapter, string $tableName, array $targetColumns): bool
     {
-        if ($adapter !== 'symfony') {
+        if (! in_array($adapter, ['symfony', 'pdo'], true)) {
             return false;
         }
 

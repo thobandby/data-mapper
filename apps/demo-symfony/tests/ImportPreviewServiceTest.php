@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ImportPreviewServiceTest extends TestCase
 {
-    public function testBuildSchemaPreviewIncludesExistingTablesOnlyForSymfonyAdapter(): void
+    public function testBuildSchemaPreviewIncludesExistingTablesOnlyForDatabaseAdapters(): void
     {
         $file = $this->createCsvFile("first_name\nAlice\n");
 
@@ -22,20 +22,22 @@ final class ImportPreviewServiceTest extends TestCase
         $importManager->method('getFilePath')->willReturn($file);
 
         $schemaManager = $this->createMock(SchemaManagerInterface::class);
-        $schemaManager->expects(self::once())
+        $schemaManager->expects(self::exactly(2))
             ->method('listTables')
             ->willReturn(['users', 'orders']);
 
         $service = new ImportPreviewService(new AnalyzeFile(), $schemaManager, $importManager, new ImportReaderFactory());
 
         $symfonyPreview = $service->buildSchemaPreview('file.csv', 'csv', 'symfony', ',');
+        $pdoPreview = $service->buildSchemaPreview('file.csv', 'csv', 'pdo', ',');
         $memoryPreview = $service->buildSchemaPreview('file.csv', 'csv', 'memory', ',');
 
         self::assertSame(['users', 'orders'], $symfonyPreview['existing_tables']);
+        self::assertSame(['users', 'orders'], $pdoPreview['existing_tables']);
         self::assertSame([], $memoryPreview['existing_tables']);
     }
 
-    public function testBuildMappingPreviewLoadsTableColumnsWhenSymfonyTableExistsAndTargetsAreEmpty(): void
+    public function testBuildMappingPreviewLoadsTableColumnsWhenDatabaseTableExistsAndTargetsAreEmpty(): void
     {
         $file = $this->createCsvFile("first_name,email\nAlice,alice@example.com\n", 'preview_mapping.csv');
 
@@ -59,7 +61,7 @@ final class ImportPreviewServiceTest extends TestCase
             ->willReturn(['users']);
 
         $service = new ImportPreviewService(new AnalyzeFile(), $schemaManager, $importManager, new ImportReaderFactory());
-        $preview = $service->buildMappingPreview('preview_mapping.csv', 'csv', 'symfony', 'users', ['first_name' => 'name'], [], ',');
+        $preview = $service->buildMappingPreview('preview_mapping.csv', 'csv', 'pdo', 'users', ['first_name' => 'name'], [], ',');
 
         self::assertSame(['id', 'name', 'email'], $preview['target_columns']);
         self::assertTrue($preview['db_initialized']);

@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        {% if adapter == 'symfony' %}
+        {% if adapter in ['symfony', 'pdo'] %}
             <div class="col-md-6">
                 <div class="section-card h-100">
                     <div class="card-header">
@@ -140,13 +140,13 @@
     </div>
 </form>
 
-{% if adapter == 'symfony' and not db_initialized %}
+{% if adapter in ['symfony', 'pdo'] and not db_initialized %}
     <form id="setup_db_form" method="POST" action="{{ path('import_setup_db') }}" class="d-none">
         <input type="hidden" name="_token" value="{{ csrf_token('import_setup_db') }}">
         <input type="hidden" name="file" value="{{ file }}">
         <input type="hidden" name="file_type" value="{{ file_type }}">
         <input type="hidden" name="adapter" value="{{ adapter }}">
-        <input type="hidden" id="setup_db_table_name" name="table_name" value="{{ table_name }}">
+        <input type="hidden" name="table_name" value="{{ table_name }}">
         {% for new_header in new_headers %}
             <input type="hidden" name="columns[]" value="{{ new_header }}">
         {% endfor %}
@@ -192,11 +192,11 @@
         <input type="hidden" name="file_type" value="{{ file_type }}">
         <input type="hidden" name="delimiter" value="{{ delimiter }}">
         <input type="hidden" name="adapter" value="{{ adapter }}">
-        <input type="hidden" id="process_table_name" name="table" value="{{ table_name }}">
+        <input type="hidden" name="table" value="{{ table_name }}">
         {% for key, val in mapping %}
             <input type="hidden" name="mapping[{{ key }}]" value="{{ val }}">
         {% endfor %}
-        <button type="submit" class="btn btn-primary btn-lg px-5 shadow" {% if adapter == 'symfony' and not db_initialized %}disabled{% endif %}>
+        <button type="submit" class="btn btn-primary btn-lg px-5 shadow" {% if adapter in ['symfony', 'pdo'] and not db_initialized %}disabled{% endif %}>
             {{ 'mapping.execute'|trans }}
         </button>
     </form>

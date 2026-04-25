@@ -8,8 +8,10 @@ use App\Entity\ImportedRow;
 use App\Import\Execution\ArtifactImportTargetBuilder;
 use App\Import\Execution\ImportTargetFactory;
 use App\Import\Execution\MemoryImportTargetBuilder;
+use App\Import\Execution\PdoImportTargetBuilder;
 use App\Import\Execution\SymfonyImportTargetBuilder;
 use App\Service\ImportArtifactStorage;
+use Doctrine\DBAL\Connection;
 use DynamicDataImporter\Domain\Exception\ImporterException;
 use DynamicDataImporter\Domain\Model\Row;
 use DynamicDataImporter\Port\Persistence\PersisterInterface;
@@ -207,6 +209,28 @@ final class ImportTargetFactoryTest extends TestCase
         self::assertSame(2, $result->imported);
     }
 
+    public function testCreateImporterUsesPdoPersisterForPdoAdapter(): void
+    {
+        $defaultPersister = new class implements PersisterInterface {
+            public function persist(object $entity): void
+            {
+                throw new \RuntimeException('Default persister should not be used.');
+            }
+
+            public function flush(): void
+            {
+                throw new \RuntimeException('Default persister should not be used.');
+            }
+        };
+
+        $factory = $this->createFactory($defaultPersister);
+        $target = $factory->createTarget('pdo', 'imported_rows');
+        $result = $target->importFile->__invoke($this->createReader([new Row(1, ['name' => 'Alice'])]));
+
+        self::assertSame(1, $result->imported);
+        self::assertNull($target->artifactPath);
+    }
+
     public function testCreatesArtifactReturnsTrueForJsonXmlAndSqlAdapters(): void
     {
         $factory = $this->createFactory($this->createMock(PersisterInterface::class));
@@ -214,6 +238,7 @@ final class ImportTargetFactoryTest extends TestCase
         self::assertTrue($factory->createsArtifact('json'));
         self::assertTrue($factory->createsArtifact('xml'));
         self::assertTrue($factory->createsArtifact('sql'));
+        self::assertFalse($factory->createsArtifact('pdo'));
         self::assertFalse($factory->createsArtifact('symfony'));
         self::assertFalse($factory->createsArtifact('memory'));
     }
@@ -257,9 +282,14 @@ final class ImportTargetFactoryTest extends TestCase
     private function createFactory(PersisterInterface $defaultPersister): ImportTargetFactory
     {
         $artifactStorage = new ImportArtifactStorage($this->artifactDirectory);
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE imported_rows (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT, imported_at TEXT)');
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getNativeConnection')->willReturn($pdo);
 
         return new ImportTargetFactory([
             new SymfonyImportTargetBuilder($defaultPersister),
+            new PdoImportTargetBuilder($connection),
             new ArtifactImportTargetBuilder($artifactStorage),
             new MemoryImportTargetBuilder(),
         ]);

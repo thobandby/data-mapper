@@ -22,7 +22,7 @@
     <input type="hidden" name="adapter" value="{{ adapter }}">
     <input type="hidden" name="delimiter" value="{{ delimiter }}">
 
-    {% if adapter == 'symfony' %}
+    {% if adapter in ['symfony', 'pdo'] %}
         <div class="section-card">
             <div class="card-header">
                 <div class="eyebrow mb-2">{{ 'schema.storage.eyebrow'|trans }}</div>
@@ -74,6 +74,20 @@
                             </div>
                         {% endfor %}
                     </div>
+                </div>
+            </div>
+        </div>
+    {% elseif adapter == 'sql' %}
+        <div class="section-card">
+            <div class="card-header">
+                <div class="eyebrow mb-2">{{ 'schema.storage.eyebrow'|trans }}</div>
+                <h3 class="h4 mb-0">{{ 'schema.storage.sql_title'|trans }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-0">
+                    <label for="sql_table_name" class="form-label fw-semibold">{{ 'schema.storage.new_table_name'|trans }}</label>
+                    <input type="text" id="sql_table_name" name="table" class="form-control" value="{{ table_name }}" placeholder="{{ 'schema.storage.new_table_placeholder'|trans }}">
+                    <div class="form-text">{{ 'schema.storage.sql_table_help'|trans }}</div>
                 </div>
             </div>
         </div>

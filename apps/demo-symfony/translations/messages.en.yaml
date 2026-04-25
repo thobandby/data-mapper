@@ -31,6 +31,7 @@ meta:
 adapter:
   memory: "Dry run"
   symfony: "Database import via Doctrine"
+  pdo: "Database import via PDO"
   json: "JSON export"
   xml: "XML export"
   sql: "SQL export (incl. schema)"
@@ -38,11 +39,11 @@ adapter:
 wizard:
   header:
     title: "File import as a technical workflow"
-    description: "The demo walks through upload, schema review, field mapping, and execution. It covers in-memory runs, JSON, XML, and SQL export, Symfony persistence, and asynchronous API imports from a single interface."
+    description: "The demo walks through upload, schema review, field mapping, and execution. It covers in-memory runs, JSON, XML, and SQL export, Doctrine- or PDO-based persistence, and asynchronous API imports from a single interface."
 
 upload:
   title: "Choose source file and target mode"
-  subtitle: "Upload CSV, Excel, JSON, or XML and decide whether to validate first, generate a JSON, XML, or SQL artifact, or persist into Symfony."
+  subtitle: "Upload CSV, Excel, JSON, or XML and decide whether to validate first, generate a JSON, XML, or SQL artifact, or persist through Doctrine or PDO."
   error:
     no_file_uploaded: "Please select a file to import."
     unsupported_file_type: "Unsupported file type: %type%"
@@ -75,7 +76,7 @@ upload:
     schema_title: "Schema and table control"
     schema_text: "For Symfony, you can select existing tables or prepare and initialize new table columns."
     modes_title: "Execution modes"
-    modes_text: "In-memory for quick checks, JSON, XML, or SQL artifacts, and Symfony for persisted or asynchronous imports."
+    modes_text: "In-memory for quick checks, JSON, XML, or SQL artifacts, plus Doctrine- or PDO-based database imports."
     api_title: "API and job status"
     api_text: "The demo includes OpenAPI docs and status endpoints for Messenger-based background jobs."
 
@@ -87,11 +88,13 @@ schema:
   storage:
     eyebrow: "Storage Target"
     title: "Define target table"
+    sql_title: "Table name for SQL export"
     existing_table: "Choose existing table"
     new_table_option: "-- Configure new table --"
     new_table_name: "New table name"
     new_table_placeholder: "imported_rows"
     new_table_help: "The table will be initialized in the next step using the selected field names."
+    sql_table_help: "This table name will be used for the generated CREATE and INSERT statements."
     suggested_columns: "Suggested table columns"
     add_column: "Add column"
     column_name: "Column name"
@@ -151,6 +154,19 @@ result:
     title: "%format% artifact is ready"
     description: "Download the generated %format% file to share the result or inspect it externally."
     download: "Download %format%"
+  selection:
+    eyebrow: "Selection"
+    title: "Applied parameters"
+    file: "File"
+    file_type: "File type"
+    adapter: "Adapter"
+    table: "Table"
+    delimiter: "Delimiter"
+    target_columns: "Target columns"
+    mapping: "Mapping"
+    not_configured: "not configured"
+    no_target_columns: "No target columns were explicitly selected."
+    no_mapping: "No explicit mapping was provided."
   async:
     eyebrow: "Background Job"
     title: "Import started as background job"

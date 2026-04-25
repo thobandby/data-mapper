@@ -75,6 +75,7 @@ final class ApiImportControllerTest extends TestCase
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
         self::assertArrayHasKey('/api/imports', $payload['paths']);
         self::assertArrayHasKey('/api/imports/{jobId}', $payload['paths']);
+        self::assertStringContainsString('pdo', (string) $payload['paths']['/api/imports']['post']['description']);
     }
 
     public function testStartRejectsMissingFile(): void

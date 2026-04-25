@@ -7,6 +7,7 @@ namespace App\Tests;
 use App\Import\Execution\ArtifactImportTargetBuilder;
 use App\Import\Execution\ImportTargetFactory;
 use App\Import\Execution\MemoryImportTargetBuilder;
+use App\Import\Execution\PdoImportTargetBuilder;
 use App\Import\Execution\ProcessedImport;
 use App\Import\Execution\SymfonyImportTargetBuilder;
 use App\Service\ImportArtifactStorage;
@@ -14,6 +15,7 @@ use App\Service\ImportExecutionService;
 use App\Service\ImportManager;
 use App\Service\ImportProcessor;
 use App\Service\ImportReaderFactory;
+use Doctrine\DBAL\Connection;
 use DynamicDataImporter\Domain\Exception\ImporterException;
 use DynamicDataImporter\Domain\Model\ImportResult;
 use DynamicDataImporter\Port\Reader\TabularReaderInterface;
@@ -241,9 +243,14 @@ final class ImportExecutionServiceTest extends TestCase
     {
         $defaultPersister = $this->createMock(\DynamicDataImporter\Port\Persistence\PersisterInterface::class);
         $artifactStorage = new ImportArtifactStorage($this->artifactDirectory);
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE imported_rows (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT, imported_at TEXT)');
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getNativeConnection')->willReturn($pdo);
 
         return new ImportTargetFactory([
             new SymfonyImportTargetBuilder($defaultPersister),
+            new PdoImportTargetBuilder($connection),
             new ArtifactImportTargetBuilder($artifactStorage),
             new MemoryImportTargetBuilder(),
         ]);
