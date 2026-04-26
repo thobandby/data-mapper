@@ -1,7 +1,7 @@
 {
   "name": "thorsten/dynamic-data-importer-demo-symfony",
   "type": "project",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Demo Symfony application for the dynamic data importer.",
   "license": "MIT",
   "require": {
