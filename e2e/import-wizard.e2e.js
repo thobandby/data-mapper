@@ -57,7 +57,8 @@ async function main() {
         } catch (error) {
           const wizardText = normalizeCellText(await page.locator('turbo-frame#import_step').textContent().catch(() => ''));
           const pageAlerts = normalizeCellText(await page.locator('.alert').allTextContents().then((texts) => texts.join(' ')).catch(() => ''));
-          error.message = `Scenario "${scenario.name}" failed: ${error.message} Wizard text: ${wizardText} Alerts: ${pageAlerts}`;
+          const headings = normalizeCellText(await page.locator('h1, h2, h3').allTextContents().then((texts) => texts.join(' | ')).catch(() => ''));
+          error.message = `Scenario "${scenario.name}" failed: ${error.message} URL: ${page.url()} Headings: ${headings} Wizard text: ${wizardText} Alerts: ${pageAlerts}`;
           throw error;
         }
       } finally {
@@ -452,7 +453,11 @@ async function runApiScenario(baseUrl, phpTempDir, databaseUrl) {
   const openApi = await docsResponse.json();
   assert.strictEqual(openApi.info.title, 'Dynamic Data Importer Demo API');
   assert.ok(openApi.info.description.includes('Supported file types are CSV, XLS, XLSX, JSON, and XML.'));
-  assert.ok(openApi.info.description.includes('Available adapters are symfony for database persistence via the demo app.'));
+  assert.ok(
+    openApi.info.description.includes(
+      'Available adapters are symfony for Doctrine-based persistence via the demo app and pdo for direct PDO-based inserts.',
+    ),
+  );
   assert.ok(openApi.info.description.includes('Use memory for an in-memory dry run without persisted artifacts.'));
   assert.ok(openApi.info.description.includes('Use json for JSON export output, xml for XML export output, and sql for SQL script export output.'));
   assert.ok(openApi.info.description.includes('The delimiter option is only relevant for CSV imports'));

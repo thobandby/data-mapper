@@ -37,6 +37,7 @@
     "psr-4": {
       "DynamicDataImporter\\": "packages/core/src/",
       "DynamicDataImporter\\Doctrine\\": "packages/doctrine-adapter/src/",
+      "DynamicDataImporter\\Pdo\\": "packages/pdo-adapter/src/",
       "DynamicDataImporter\\Cli\\": "packages/cli-adapter/src/",
       "DynamicDataImporter\\Symfony\\": "packages/symfony-adapter/src/",
       "App\\": "apps/demo-symfony/src/"
@@ -47,6 +48,7 @@
       "DynamicDataImporter\\Tests\\": "packages/core/tests/",
       "DynamicDataImporter\\Cli\\Tests\\": "packages/cli-adapter/tests/",
       "DynamicDataImporter\\Doctrine\\Tests\\": "packages/doctrine-adapter/tests/",
+      "DynamicDataImporter\\Tests\\Pdo\\": "packages/pdo-adapter/tests/",
       "DynamicDataImporter\\Tests\\Doctrine\\": "packages/doctrine-adapter/tests/",
       "DynamicDataImporter\\Tests\\Symfony\\": "packages/symfony-adapter/tests/",
       "App\\Tests\\": "apps/demo-symfony/tests/"
@@ -59,6 +61,7 @@
     "cs:fix:core": "php-cs-fixer fix --config=packages/core/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:fix:cli-adapter": "php-cs-fixer fix --config=packages/cli-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:fix:doctrine-adapter": "php-cs-fixer fix --config=packages/doctrine-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:fix:pdo-adapter": "php-cs-fixer fix --config=packages/pdo-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:fix:symfony-adapter": "php-cs-fixer fix --config=packages/symfony-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:fix:demo-symfony": "php-cs-fixer fix --config=apps/demo-symfony/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:fix:demo-cli": "php-cs-fixer fix --config=apps/demo-cli/.php-cs-fixer.dist.php --verbose --sequential",
@@ -66,6 +69,7 @@
       "@cs:fix:core",
       "@cs:fix:cli-adapter",
       "@cs:fix:doctrine-adapter",
+      "@cs:fix:pdo-adapter",
       "@cs:fix:symfony-adapter",
       "@cs:fix:demo-symfony",
       "@cs:fix:demo-cli"
@@ -74,6 +78,7 @@
     "cs:check:core": "php-cs-fixer fix --dry-run --diff --config=packages/core/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:check:cli-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/cli-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:check:doctrine-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/doctrine-adapter/.php-cs-fixer.dist.php --verbose --sequential",
+    "cs:check:pdo-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/pdo-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:check:symfony-adapter": "php-cs-fixer fix --dry-run --diff --config=packages/symfony-adapter/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:check:demo-symfony": "php-cs-fixer fix --dry-run --diff --config=apps/demo-symfony/.php-cs-fixer.dist.php --verbose --sequential",
     "cs:check:demo-cli": "php-cs-fixer fix --dry-run --diff --config=apps/demo-cli/.php-cs-fixer.dist.php --verbose --sequential",
@@ -81,6 +86,7 @@
       "@cs:check:core",
       "@cs:check:cli-adapter",
       "@cs:check:doctrine-adapter",
+      "@cs:check:pdo-adapter",
       "@cs:check:symfony-adapter",
       "@cs:check:demo-symfony",
       "@cs:check:demo-cli"
@@ -88,6 +94,7 @@
     "insights:core": "phpinsights analyse --disable-security-check --config-path=packages/core/phpinsights.php --no-interaction packages/core",
     "insights:cli-adapter": "phpinsights analyse --disable-security-check --config-path=packages/cli-adapter/phpinsights.php --no-interaction packages/cli-adapter",
     "insights:doctrine-adapter": "phpinsights analyse --disable-security-check --config-path=packages/doctrine-adapter/phpinsights.php --no-interaction packages/doctrine-adapter",
+    "insights:pdo-adapter": "phpinsights analyse --disable-security-check --config-path=packages/pdo-adapter/phpinsights.php --no-interaction packages/pdo-adapter",
     "insights:symfony-adapter": "phpinsights analyse --disable-security-check --config-path=packages/symfony-adapter/phpinsights.php --no-interaction packages/symfony-adapter",
     "insights:demo-symfony": "phpinsights analyse --disable-security-check --config-path=apps/demo-symfony/phpinsights.php --no-interaction apps/demo-symfony",
     "insights:demo-cli": "phpinsights analyse --disable-security-check --config-path=apps/demo-cli/phpinsights.php --no-interaction apps/demo-cli",
@@ -95,6 +102,7 @@
       "@insights:core",
       "@insights:cli-adapter",
       "@insights:doctrine-adapter",
+      "@insights:pdo-adapter",
       "@insights:symfony-adapter",
       "@insights:demo-symfony",
       "@insights:demo-cli"
